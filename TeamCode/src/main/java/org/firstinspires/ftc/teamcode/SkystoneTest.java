@@ -38,14 +38,22 @@ public class SkystoneTest extends OpMode {
 
 	@Override
 	public void loop() {
-		List<Recognition> updatedRecognitions = objectDetector.getUpdatedRecognitions();
-		if (updatedRecognitions != null) {
-			for (Recognition recognition : updatedRecognitions) {
+		List<Recognition> recognitions = objectDetector.getRecognitions();
+		if (recognitions != null) {
+			int skyStones = 0;
+			int stones = 0;
+
+			for (Recognition recognition : recognitions) {
 				if (recognition.getLabel().equals(SKYSTONE_LABEL)) {
-					telemetry.addData("Skystone", recognition.getLeft());
-					telemetry.update();
+					skyStones++;
+				} else {
+					stones++;
 				}
 			}
+
+			telemetry.addData("SkyStones", skyStones);
+			telemetry.addData("Stones", stones);
+			telemetry.update();
 		}
 	}
 
@@ -68,7 +76,7 @@ public class SkystoneTest extends OpMode {
 				"tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
 
 		TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-		tfodParameters.minimumConfidence = 0.8;
+		tfodParameters.minimumConfidence = 0.6;
 
 		objectDetector = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
 		objectDetector.loadModelFromAsset(TFOD_MODEL_ASSET, STONE_LABEL, SKYSTONE_LABEL);
