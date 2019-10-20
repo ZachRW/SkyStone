@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -11,7 +12,11 @@ public class Hardware {
 			backLeft, backRight;
 	private DcMotor[] wheels;
 
-	private DcMotor slideLeft, slideRight;
+	private DcMotor leftSlide, rightSlide;
+	private DcMotor pusher;
+
+	private CRServo leftSuck, rightSuck;
+	private CRServo grabber;
 
 	private Telemetry telemetry;
 
@@ -22,8 +27,12 @@ public class Hardware {
 		frontRight = hardwareMap.dcMotor.get("fr");
 		backLeft   = hardwareMap.dcMotor.get("bl");
 		backRight  = hardwareMap.dcMotor.get("br");
-		slideLeft  = hardwareMap.dcMotor.get("sl");
-		slideRight = hardwareMap.dcMotor.get("sr");
+		leftSlide  = hardwareMap.dcMotor.get("lsl");
+		rightSlide = hardwareMap.dcMotor.get("rsl");
+		pusher     = hardwareMap.dcMotor.get("push");
+		leftSuck   = hardwareMap.crservo.get("lsu");
+		rightSuck  = hardwareMap.crservo.get("rsu");
+		grabber    = hardwareMap.crservo.get("grab");
 
 		wheels = new DcMotor[]{
 				frontLeft, frontRight,
@@ -32,27 +41,30 @@ public class Hardware {
 
 		frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 		backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+		pusher.setDirection(DcMotorSimple.Direction.REVERSE);
+		leftSuck.setDirection(DcMotorSimple.Direction.REVERSE);
+		grabber.setDirection(DcMotorSimple.Direction.REVERSE);
 
 		setWheelZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-		slideLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-		slideRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+		leftSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+		rightSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 		setWheelMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 		setWheelMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-		slideLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-		slideLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-		slideRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-		slideRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		leftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+		leftSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+		rightSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 		telemetry.addLine("Hardware Initialized");
 	}
 
-	void setMecanumPower(double forwards, double strafe, double turn) {
+	void setMecanumPower(float forwards, float strafe, float turn) {
 		setMecanumPower(forwards, strafe, turn, 1);
 	}
 
-	void setMecanumPower(double forwards, double strafe, double turn, double speed) {
+	void setMecanumPower(float forwards, float strafe, float turn, float speed) {
 		frontLeft.setPower((forwards - strafe + turn) * speed);
 		frontRight.setPower((forwards + strafe - turn) * speed);
 		backLeft.setPower((forwards + strafe + turn) * speed);
@@ -65,8 +77,22 @@ public class Hardware {
 		}
 	}
 
-	void setLinearSlidePower(double power) {
+	void setLinearSlidePower(float power) {
+		leftSlide.setPower(power);
+		rightSlide.setPower(power);
+	}
 
+	void setSuckPower(float left, float right) {
+		leftSuck.setPower(left);
+		rightSuck.setPower(right);
+	}
+
+	void setPusherPower(float power) {
+		pusher.setPower(power);
+	}
+
+	void setGrabberPower(float power) {
+		grabber.setPower(power);
 	}
 
 	private void setWheelZeroPowerBehavior(DcMotor.ZeroPowerBehavior behavior) {

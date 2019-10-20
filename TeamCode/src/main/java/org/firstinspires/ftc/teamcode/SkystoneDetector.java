@@ -16,6 +16,7 @@ import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class SkystoneDetector extends OpenCVPipeline {
@@ -38,12 +39,6 @@ public class SkystoneDetector extends OpenCVPipeline {
 
 	@Override
 	public Mat processFrame(Mat rgba, Mat gray) {
-		try {
-			Thread.sleep(100);
-		} catch (InterruptedException e) {
-			Thread.currentThread().interrupt();
-		}
-
 		Mat colorMask = new Mat(rgba.size(), CvType.CV_8UC4);
 		rangeFilter.process(rgba.clone(), colorMask);
 
@@ -64,13 +59,26 @@ public class SkystoneDetector extends OpenCVPipeline {
 
 		Imgproc.drawContours(rgba, contours, maxAreaIndex, new Scalar(0, 255, 0), 2);
 
+		StoneType[] stones = new StoneType[6];
+
 		if (maxArea > 0) {
-			for (Point stoneCenter : stoneCenters(contours.get(maxAreaIndex))) {
-				Imgproc.circle(rgba, stoneCenter, 1, new Scalar(255, 0, 0), 34);
-				telemetry.addData("Visible", stoneCenter.inside(new Rect(new Point(), rgba.size())));
+			Point[] stoneCenters = stoneCenters(contours.get(maxAreaIndex));
+			for (int i = 0; i < stoneCenters.length; i++) {
+				Imgproc.circle(rgba, stoneCenters[i], 1, new Scalar(255, 0, 0), 10);
+
+				double[] maskPixel = colorMask.get((int) stoneCenters[i].y, (int) stoneCenters[i].x);
+				if (maskPixel != null && maskPixel.length > 0) {
+					if (maskPixel[0] > 0) {
+						stones[i] = StoneType.STONE;
+					} else {
+						stones[i] = StoneType.SKYSTONE;
+					}
+				}
 			}
-			telemetry.update();
 		}
+
+		telemetry.addData("Stones", Arrays.toString(stones));
+		telemetry.update();
 
 		return rgba;
 	}
@@ -82,7 +90,7 @@ public class SkystoneDetector extends OpenCVPipeline {
 		Point[] boundingPoints = new Point[4];
 		boundingBox.points(boundingPoints);
 
-		Line edge1 = new Line(boundingPoints[0], boundingPoints[1]);
+		Line edge1 = new Line(boundingPoints[1], boundingPoints[0]);
 		Line edge2 = new Line(boundingPoints[1], boundingPoints[2]);
 
 		Line longEdge, shortEdge;
