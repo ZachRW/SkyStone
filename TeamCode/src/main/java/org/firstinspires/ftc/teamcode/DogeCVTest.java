@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp
 public class DogeCVTest extends OpMode {
-	SkystoneDetector skystoneDetector = new SkystoneDetector();
+	private SkystoneDetector skystoneDetector = new SkystoneDetector(telemetry);
 
 	@Override
 	public void init() {
