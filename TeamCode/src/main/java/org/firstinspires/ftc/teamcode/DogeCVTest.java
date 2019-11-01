@@ -22,7 +22,7 @@ public class DogeCVTest extends OpMode {
 		phoneCam = new OpenCvInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraViewId);
 		phoneCam.openCameraDevice();
 		phoneCam.setPipeline(skystoneDetector);
-		phoneCam.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+		phoneCam.startStreaming(960, 720, OpenCvCameraRotation.UPRIGHT);
 	}
 
 	@Override

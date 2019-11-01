@@ -12,11 +12,11 @@ public class Hardware {
 			backLeft, backRight;
 	private DcMotor[] wheels;
 
-	private DcMotor leftSlide, rightSlide;
-	private DcMotor pusher;
+	private DcMotor slide;
 
 	private CRServo leftSuck, rightSuck;
 	private CRServo grabber;
+	private CRServo pusher;
 
 	private Telemetry telemetry;
 
@@ -27,12 +27,11 @@ public class Hardware {
 		frontRight = hardwareMap.dcMotor.get("fr");
 		backLeft   = hardwareMap.dcMotor.get("bl");
 		backRight  = hardwareMap.dcMotor.get("br");
-		leftSlide  = hardwareMap.dcMotor.get("lsl");
-		rightSlide = hardwareMap.dcMotor.get("rsl");
-		pusher     = hardwareMap.dcMotor.get("push");
-		leftSuck   = hardwareMap.crservo.get("lsu");
-		rightSuck  = hardwareMap.crservo.get("rsu");
+		slide      = hardwareMap.dcMotor.get("slide");
+		leftSuck   = hardwareMap.crservo.get("ls");
+		rightSuck  = hardwareMap.crservo.get("rs");
 		grabber    = hardwareMap.crservo.get("grab");
+		pusher     = hardwareMap.crservo.get("push");
 
 		wheels = new DcMotor[]{
 				frontLeft, frontRight,
@@ -41,23 +40,20 @@ public class Hardware {
 
 		frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 		backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-		pusher.setDirection(DcMotorSimple.Direction.REVERSE);
 		leftSuck.setDirection(DcMotorSimple.Direction.REVERSE);
 		grabber.setDirection(DcMotorSimple.Direction.REVERSE);
 
 		setWheelZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-		leftSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-		rightSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+		slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-		setWheelMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-		setWheelMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-		leftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-		leftSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-		rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-		rightSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//		setWheelMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//		setWheelMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//
+//		slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//		slide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 		telemetry.addLine("Hardware Initialized");
+		telemetry.update();
 	}
 
 	void setMecanumPower(float forwards, float strafe, float turn) {
@@ -78,8 +74,7 @@ public class Hardware {
 	}
 
 	void setLinearSlidePower(float power) {
-		leftSlide.setPower(power);
-		rightSlide.setPower(power);
+		slide.setPower(power);
 	}
 
 	void setSuckPower(float left, float right) {

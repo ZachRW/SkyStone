@@ -12,6 +12,7 @@ import org.opencv.core.Point;
 import org.opencv.core.RotatedRect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
+import org.openftc.easyopencv.OpenCvCameraException;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 import java.util.ArrayList;
@@ -63,7 +64,7 @@ public class SkystoneDetector extends OpenCvPipeline {
 
 		// If the display Mat is null show the frame,
 		// otherwise show display.
-		if (display == null) {
+		if (display == null || display.cols() != input.cols() || display.rows() != input.rows()) {
 			return input;
 		}
 		return display;
@@ -80,7 +81,7 @@ public class SkystoneDetector extends OpenCvPipeline {
 	 */
 	public List<Integer> skystonePositions() {
 		// Return an empty list is frame is null
-		if (frame == null) {
+		if (frame == null || frame.empty()) {
 			return new ArrayList<>();
 		}
 
@@ -94,7 +95,13 @@ public class SkystoneDetector extends OpenCvPipeline {
 			telemetry.update();
 			return null;
 		}
-		rangeFilter.process(frame.clone(), colorMask);
+		try {
+			rangeFilter.process(frame.clone(), colorMask);
+		} catch (OpenCvCameraException e) {
+			telemetry.addData("Error", e.getMessage());
+			telemetry.update();
+			return null;
+		}
 
 		// Find the contours (edges) of the mask
 		List<MatOfPoint> contours = new ArrayList<>();
@@ -139,6 +146,11 @@ public class SkystoneDetector extends OpenCvPipeline {
 				}
 			}
 		}
+
+		if (display != null) {
+			display.release();
+		}
+		colorMask.release();
 
 		// Display drawImage
 		display = drawImage;
