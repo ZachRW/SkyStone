@@ -40,7 +40,7 @@ public class Hardware {
 
 		frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 		backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-		leftSuck.setDirection(DcMotorSimple.Direction.REVERSE);
+		rightSuck.setDirection(DcMotorSimple.Direction.REVERSE);
 		grabber.setDirection(DcMotorSimple.Direction.REVERSE);
 
 		setWheelZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

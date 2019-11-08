@@ -37,8 +37,7 @@ public class Drive extends OpMode {
 			hardware.setGrabberPower(0);
 		}
 
-		hardware.setSuckPower(gamepad2.left_trigger - gamepad2.right_trigger,
-				gamepad2.left_trigger - gamepad2.right_trigger);
+		hardware.setSuckPower(gamepad2.left_trigger, gamepad2.right_trigger);
 		hardware.setPusherPower(-gamepad2.left_stick_y);
 	}
 }
