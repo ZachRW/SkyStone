@@ -79,7 +79,7 @@ public class SkystoneDetector extends OpenCvPipeline {
 	 *
 	 * @return a list of the positions of skystones.
 	 */
-	public List<Integer> skystonePositions() {
+	List<Integer> skystonePositions() {
 		// Return an empty list is frame is null
 		if (frame == null || frame.empty()) {
 			return new ArrayList<>();

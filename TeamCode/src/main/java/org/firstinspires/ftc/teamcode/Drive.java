@@ -11,20 +11,20 @@ public class Drive extends OpMode {
 
 	@Override
 	public void init() {
-		hardware = new Hardware(hardwareMap, telemetry);
+		hardware = new Hardware(this);
 		telemetry.addLine("Initialization Finished");
 		telemetry.update();
 	}
 
 	@Override
 	public void loop() {
-		hardware.setMecanumPower(-gamepad1.left_stick_y * .5f,
-				gamepad1.left_stick_x * .5f, gamepad1.right_stick_x * .5f);
+		hardware.setMecanumPower(-gamepad1.left_stick_y,
+				gamepad1.left_stick_x, gamepad1.right_stick_x, .5);
 
 		if (gamepad2.dpad_up) {
-			hardware.setLinearSlidePower(1);
+			hardware.setLinearSlidePower(.5);
 		} else if (gamepad2.dpad_down) {
-			hardware.setLinearSlidePower(-1);
+			hardware.setLinearSlidePower(-.5);
 		} else {
 			hardware.setLinearSlidePower(0);
 		}
