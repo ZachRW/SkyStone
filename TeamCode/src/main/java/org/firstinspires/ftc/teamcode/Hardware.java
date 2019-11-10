@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -15,6 +16,7 @@ public class Hardware {
 	private DcMotor frontLeft, frontRight,
 			backLeft, backRight;
 	private DcMotor[] wheels;
+	private String[] wheelLabels;
 
 	private DcMotor leftSlide, rightSlide;
 
@@ -26,11 +28,13 @@ public class Hardware {
 	private Telemetry telemetry;
 
 	private SkystoneDetector skystoneDetector;
+	private ElapsedTime timer;
 
 	Hardware(OpMode opMode) {
 		this.telemetry = opMode.telemetry;
 
 		skystoneDetector = new SkystoneDetector(telemetry);
+		timer            = new ElapsedTime();
 
 		HardwareMap hardwareMap = opMode.hardwareMap;
 		frontLeft  = hardwareMap.dcMotor.get("fl");
@@ -44,9 +48,12 @@ public class Hardware {
 		grabber    = hardwareMap.crservo.get("grab");
 		pusher     = hardwareMap.crservo.get("push");
 
-		wheels = new DcMotor[]{
+		wheels      = new DcMotor[]{
 				frontLeft, frontRight,
 				backLeft, backRight
+		};
+		wheelLabels = new String[]{
+				"FL", "FR", "BL", "BR"
 		};
 
 		frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -60,7 +67,7 @@ public class Hardware {
 
 //		setWheelMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 //		setWheelMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//
+
 		leftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 		leftSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 		rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -118,8 +125,40 @@ public class Hardware {
 		return skystoneDetector.skystonePositions();
 	}
 
+	void forward(int ticks, double speed, double timeoutS) {
+		move(ticks, ticks, ticks, ticks, speed, timeoutS, "Forward");
+	}
+
+	void backward(int ticks, double speed, double timeoutS) {
+		move(-ticks, -ticks, -ticks, -ticks, speed, timeoutS, "Backward");
+	}
+
+	void right(int ticks, double speed, double timeoutS) {
+		move(-ticks, ticks, ticks, -ticks, speed, timeoutS, "Right");
+	}
+
+	void left(int ticks, double speed, double timeoutS) {
+		move(ticks, -ticks, -ticks, ticks, speed, timeoutS, "Left");
+	}
+
+	void turnRight(int ticks, double speed, double timeoutS) {
+		move(ticks, -ticks, ticks, -ticks, speed, timeoutS, "Right Turn");
+	}
+
+	void turnLeft(int ticks, double speed, double timeoutS) {
+		move(-ticks, ticks, -ticks, ticks, speed, timeoutS, "Left Turn");
+	}
+
+	void wait(double seconds) {
+		timer.reset();
+		while (timer.seconds() < seconds && opMode.opModeIsActive()) {
+			telemetry.addData("Waiting", "%4.2ds");
+			telemetry.update();
+		}
+	}
+
 	private void move(int flTicks, int frTicks, int blTicks, int brTicks,
-					  double speed, double timeout) {
+	                  double speed, double timeoutS, String action) {
 		setWheelMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 		frontLeft.setTargetPosition(flTicks);
@@ -131,7 +170,20 @@ public class Hardware {
 			wheel.setPower(speed);
 		}
 
-		while (wheelsBusy() && opMode.opModeIsActive()) {
+		timer.reset();
+		while (wheelsBusy() && timer.seconds() < timeoutS && opMode.opModeIsActive()) {
+			telemetry.addLine(action + "\n");
+			telemetry.addData("Motor", "Position |  Target  | Distance");
+			for (int i = 0; i < wheels.length; i++) {
+				telemetry.addData(
+						wheelLabels[i],
+						"%8d | %8d | %8d",
+						wheels[i].getCurrentPosition(),
+						wheels[i].getTargetPosition(),
+						wheels[i].getTargetPosition() - wheels[i].getCurrentPosition()
+				);
+			}
+			telemetry.update();
 		}
 	}
 
