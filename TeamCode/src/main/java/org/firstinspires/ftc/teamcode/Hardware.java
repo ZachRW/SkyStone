@@ -59,21 +59,33 @@ public class Hardware {
 		frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 		backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 		rightSuck.setDirection(DcMotorSimple.Direction.REVERSE);
+		leftSlide.setDirection(DcMotorSimple.Direction.REVERSE);
 		grabber.setDirection(DcMotorSimple.Direction.REVERSE);
 
 		setWheelZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		leftSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		rightSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-//		setWheelMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//		setWheelMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		setWheelMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+		setWheelMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+		leftSlide.setTargetPosition(0);
+		rightSlide.setTargetPosition(0);
 
 		leftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-		leftSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 		rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-		rightSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 		telemetry.addLine("Hardware Initialized");
+		telemetry.update();
+	}
+
+	void slideTele() {
+		telemetry.addData("Left", "Pos: %d, Tar: %d",
+				leftSlide.getCurrentPosition(), leftSlide.getTargetPosition());
+		telemetry.addData("Right", "Pos: %d, Tar: %d",
+				rightSlide.getCurrentPosition(), rightSlide.getTargetPosition());
 		telemetry.update();
 	}
 
@@ -92,6 +104,16 @@ public class Hardware {
 	void setLinearSlidePower(double power) {
 		leftSlide.setPower(power);
 		rightSlide.setPower(power);
+	}
+
+	void incrementLinearSlideTarget(int ticks) {
+		int target = leftSlide.getTargetPosition() + ticks;
+		if (target < -100) {
+			target = -100;
+		}
+
+		leftSlide.setTargetPosition(target);
+		rightSlide.setTargetPosition(target);
 	}
 
 	void setSuckPower(double left, double right) {
@@ -158,7 +180,7 @@ public class Hardware {
 	}
 
 	private void move(int flTicks, int frTicks, int blTicks, int brTicks,
-	                  double speed, double timeoutS, String action) {
+					  double speed, double timeoutS, String action) {
 		setWheelMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 		frontLeft.setTargetPosition(flTicks);

@@ -14,6 +14,8 @@ public class Drive extends OpMode {
 		hardware = new Hardware(this);
 		telemetry.addLine("Initialization Finished");
 		telemetry.update();
+
+		hardware.setLinearSlidePower(1);
 	}
 
 	@Override
@@ -22,11 +24,9 @@ public class Drive extends OpMode {
 				gamepad1.left_stick_x, gamepad1.right_stick_x, .5);
 
 		if (gamepad2.dpad_up) {
-			hardware.setLinearSlidePower(.5);
+			hardware.incrementLinearSlideTarget(10);
 		} else if (gamepad2.dpad_down) {
-			hardware.setLinearSlidePower(-.5);
-		} else {
-			hardware.setLinearSlidePower(0);
+			hardware.incrementLinearSlideTarget(-10);
 		}
 
 		if (gamepad2.right_bumper) {
@@ -39,5 +39,7 @@ public class Drive extends OpMode {
 
 		hardware.setSuckPower(gamepad2.left_trigger, gamepad2.right_trigger);
 		hardware.setPusherPower(-gamepad2.left_stick_y);
+
+		hardware.slideTele();
 	}
 }
