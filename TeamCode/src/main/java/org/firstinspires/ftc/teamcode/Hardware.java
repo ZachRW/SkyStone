@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -21,8 +22,7 @@ public class Hardware {
 	private DcMotor leftSlide, rightSlide;
 
 	private CRServo leftSuck, rightSuck;
-	private CRServo grabber;
-	private CRServo pusher;
+	private Servo puller;
 
 	private LinearOpMode opMode;
 	private Telemetry telemetry;
@@ -45,8 +45,7 @@ public class Hardware {
 		rightSlide = hardwareMap.dcMotor.get("r slide");
 		leftSuck   = hardwareMap.crservo.get("ls");
 		rightSuck  = hardwareMap.crservo.get("rs");
-		grabber    = hardwareMap.crservo.get("grab");
-		pusher     = hardwareMap.crservo.get("push");
+		puller     = hardwareMap.servo.get("pull");
 
 		wheels      = new DcMotor[]{
 				frontLeft, frontRight,
@@ -56,11 +55,12 @@ public class Hardware {
 				"FL", "FR", "BL", "BR"
 		};
 
+		puller.setPosition(-1);
+
 		frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 		backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 		rightSuck.setDirection(DcMotorSimple.Direction.REVERSE);
 		leftSlide.setDirection(DcMotorSimple.Direction.REVERSE);
-		grabber.setDirection(DcMotorSimple.Direction.REVERSE);
 
 		setWheelZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		leftSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -119,14 +119,6 @@ public class Hardware {
 	void setSuckPower(double left, double right) {
 		leftSuck.setPower(left);
 		rightSuck.setPower(right);
-	}
-
-	void setPusherPower(double power) {
-		pusher.setPower(power);
-	}
-
-	void setGrabberPower(double power) {
-		grabber.setPower(power);
 	}
 
 	private void setWheelMode(DcMotor.RunMode runMode) {
