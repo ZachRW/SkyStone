@@ -31,6 +31,6 @@ public class Drive extends OpMode {
 
 		hardware.setSuckPower(gamepad2.left_trigger, gamepad2.right_trigger);
 
-		hardware.slideTele();
+		hardware.wheelTele();
 	}
 }

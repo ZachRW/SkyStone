@@ -55,7 +55,7 @@ public class Hardware {
 				"FL", "FR", "BL", "BR"
 		};
 
-		puller.setPosition(-1);
+		puller.setPosition(0);
 
 		frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 		backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -86,6 +86,14 @@ public class Hardware {
 				leftSlide.getCurrentPosition(), leftSlide.getTargetPosition());
 		telemetry.addData("Right", "Pos: %d, Tar: %d",
 				rightSlide.getCurrentPosition(), rightSlide.getTargetPosition());
+		telemetry.update();
+	}
+
+	void wheelTele() {
+		telemetry.addData("FL", frontLeft.getCurrentPosition());
+		telemetry.addData("FR", frontRight.getCurrentPosition());
+		telemetry.addData("BL", backLeft.getCurrentPosition());
+		telemetry.addData("BR", backRight.getCurrentPosition());
 		telemetry.update();
 	}
 
