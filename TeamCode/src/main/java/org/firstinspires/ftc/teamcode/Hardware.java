@@ -69,14 +69,6 @@ public class Hardware {
 		setWheelMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 		setWheelMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-		leftSlide.setTargetPosition(0);
-		rightSlide.setTargetPosition(0);
-
-		leftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-		leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-		rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-		rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
 		telemetry.addLine("Hardware Initialized");
 		telemetry.update();
 	}
@@ -112,16 +104,6 @@ public class Hardware {
 	void setLinearSlidePower(double power) {
 		leftSlide.setPower(power);
 		rightSlide.setPower(power);
-	}
-
-	void incrementLinearSlideTarget(int ticks) {
-		int target = leftSlide.getTargetPosition() + ticks;
-		if (target < -100) {
-			target = -100;
-		}
-
-		leftSlide.setTargetPosition(target);
-		rightSlide.setTargetPosition(target);
 	}
 
 	void setSuckPower(double left, double right) {

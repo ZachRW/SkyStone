@@ -24,9 +24,9 @@ public class Drive extends OpMode {
 				gamepad1.left_stick_x, gamepad1.right_stick_x, .5);
 
 		if (gamepad2.dpad_up) {
-			hardware.incrementLinearSlideTarget(10);
+			hardware.setLinearSlidePower(1);
 		} else if (gamepad2.dpad_down) {
-			hardware.incrementLinearSlideTarget(-10);
+			hardware.setLinearSlidePower(-1);
 		}
 
 		hardware.setSuckPower(gamepad2.left_trigger, gamepad2.right_trigger);
