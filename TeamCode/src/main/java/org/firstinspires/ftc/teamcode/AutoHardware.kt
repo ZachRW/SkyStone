@@ -1,10 +1,10 @@
 package org.firstinspires.ftc.teamcode
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
-import com.qualcomm.robotcore.hardware.DcMotor
+import com.qualcomm.robotcore.hardware.DcMotor.RunMode
 import com.qualcomm.robotcore.util.ElapsedTime
 
-class AutoHardware internal constructor(private val linearOpMode: LinearOpMode)
+class AutoHardware(private val linearOpMode: LinearOpMode)
     : Hardware(linearOpMode.hardwareMap, linearOpMode.telemetry) {
     private val timer = ElapsedTime()
     private val skystoneDetector = SkystoneDetector(telemetry)
@@ -47,7 +47,7 @@ class AutoHardware internal constructor(private val linearOpMode: LinearOpMode)
 
     private fun move(flTicks: Int, frTicks: Int, blTicks: Int, brTicks: Int,
                      speed: Double, timeoutS: Double, action: String) {
-        setWheelMode(DcMotor.RunMode.RUN_TO_POSITION)
+        wheels.forEach { it.mode = RunMode.RUN_TO_POSITION }
 
         frontLeft.targetPosition = flTicks
         frontRight.targetPosition = frTicks
@@ -75,12 +75,6 @@ class AutoHardware internal constructor(private val linearOpMode: LinearOpMode)
         }
     }
 
-    private fun wheelsBusy(): Boolean {
-        for (wheel in wheels) {
-            if (wheel.isBusy) {
-                return true
-            }
-        }
-        return false
-    }
+    private fun wheelsBusy(): Boolean =
+            wheels.any { it.targetPosition - it.currentPosition < 50 }
 }

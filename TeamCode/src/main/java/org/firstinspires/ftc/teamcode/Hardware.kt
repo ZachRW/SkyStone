@@ -2,26 +2,27 @@ package org.firstinspires.ftc.teamcode
 
 import com.qualcomm.robotcore.hardware.CRServo
 import com.qualcomm.robotcore.hardware.DcMotor
-import com.qualcomm.robotcore.hardware.DcMotorSimple
+import com.qualcomm.robotcore.hardware.DcMotor.RunMode
+import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior
+import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction
 import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.Servo
-
 import org.firstinspires.ftc.robotcore.external.Telemetry
 
-open class Hardware internal constructor(hardwareMap: HardwareMap, val telemetry: Telemetry) {
-    val frontLeft: DcMotor
-    val frontRight: DcMotor
-    val backLeft: DcMotor
-    val backRight: DcMotor
-    val wheels: Array<DcMotor>
-    val wheelLabels: Array<String>
+open class Hardware(hardwareMap: HardwareMap, protected val telemetry: Telemetry) {
+    protected val frontLeft: DcMotor
+    protected val frontRight: DcMotor
+    protected val backLeft: DcMotor
+    protected val backRight: DcMotor
+    protected val wheels: Array<DcMotor>
+    protected val wheelLabels: Array<String>
 
-    private val leftSlide: DcMotor
-    private val rightSlide: DcMotor
+    protected val leftSlide: DcMotor
+    protected val rightSlide: DcMotor
 
-    private val leftSuck: CRServo
-    private val rightSuck: CRServo
-    private val puller: Servo
+    protected val leftSuck: CRServo
+    protected val rightSuck: CRServo
+    protected val puller: Servo
 
 
     init {
@@ -40,45 +41,20 @@ open class Hardware internal constructor(hardwareMap: HardwareMap, val telemetry
         wheels = arrayOf(frontLeft, frontRight, backLeft, backRight)
         wheelLabels = arrayOf("FL", "FR", "BL", "BR")
 
+        wheels.forEach {
+            it.direction = Direction.REVERSE
+            it.zeroPowerBehavior = ZeroPowerBehavior.BRAKE
+
+            it.mode = RunMode.STOP_AND_RESET_ENCODER
+            it.mode = RunMode.RUN_USING_ENCODER
+        }
+
+        leftSlide.zeroPowerBehavior = ZeroPowerBehavior.BRAKE
+        rightSlide.zeroPowerBehavior = ZeroPowerBehavior.BRAKE
+
         puller.position = 0.0
 
-        frontLeft.direction = DcMotorSimple.Direction.REVERSE
-        backLeft.direction = DcMotorSimple.Direction.REVERSE
-        rightSuck.direction = DcMotorSimple.Direction.REVERSE
-        leftSlide.direction = DcMotorSimple.Direction.REVERSE
-
-        setWheelZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE)
-        leftSlide.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
-        rightSlide.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
-
-        setWheelMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER)
-        setWheelMode(DcMotor.RunMode.RUN_USING_ENCODER)
-
-        leftSlide.targetPosition = 0
-        rightSlide.targetPosition = 0
-
-        leftSlide.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
-        leftSlide.mode = DcMotor.RunMode.RUN_TO_POSITION
-        rightSlide.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
-        rightSlide.mode = DcMotor.RunMode.RUN_TO_POSITION
-
         telemetry.addLine("Hardware Initialized")
-        telemetry.update()
-    }
-
-    internal fun slideTele() {
-        telemetry.addData("Left", "Pos: %d, Tar: %d",
-                leftSlide.currentPosition, leftSlide.targetPosition)
-        telemetry.addData("Right", "Pos: %d, Tar: %d",
-                rightSlide.currentPosition, rightSlide.targetPosition)
-        telemetry.update()
-    }
-
-    internal fun wheelTele() {
-        telemetry.addData("FL", frontLeft.currentPosition)
-        telemetry.addData("FR", frontRight.currentPosition)
-        telemetry.addData("BL", backLeft.currentPosition)
-        telemetry.addData("BR", backRight.currentPosition)
         telemetry.update()
     }
 
@@ -94,30 +70,8 @@ open class Hardware internal constructor(hardwareMap: HardwareMap, val telemetry
         rightSlide.power = power
     }
 
-    internal fun incrementLinearSlideTarget(ticks: Int) {
-        var target = leftSlide.targetPosition + ticks
-        if (target < -100) {
-            target = -100
-        }
-
-        leftSlide.targetPosition = target
-        rightSlide.targetPosition = target
-    }
-
     internal fun setSuckPower(left: Double, right: Double) {
         leftSuck.power = left
         rightSuck.power = right
-    }
-
-    fun setWheelMode(runMode: DcMotor.RunMode) {
-        for (wheel in wheels) {
-            wheel.mode = runMode
-        }
-    }
-
-    private fun setWheelZeroPowerBehavior(behavior: DcMotor.ZeroPowerBehavior) {
-        for (wheel in wheels) {
-            wheel.zeroPowerBehavior = behavior
-        }
     }
 }

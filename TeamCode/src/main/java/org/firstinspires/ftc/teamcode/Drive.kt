@@ -20,13 +20,11 @@ class Drive : OpMode() {
                 gamepad1.left_stick_x.toDouble(), gamepad1.right_stick_x.toDouble(), .5)
 
         if (gamepad2.dpad_up) {
-            hardware.incrementLinearSlideTarget(10)
+            hardware.setLinearSlidePower(1.0)
         } else if (gamepad2.dpad_down) {
-            hardware.incrementLinearSlideTarget(-10)
+            hardware.setLinearSlidePower(-1.0)
         }
 
         hardware.setSuckPower(gamepad2.left_trigger.toDouble(), gamepad2.right_trigger.toDouble())
-
-        hardware.wheelTele()
     }
 }
