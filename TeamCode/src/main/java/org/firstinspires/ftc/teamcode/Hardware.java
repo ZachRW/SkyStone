@@ -55,7 +55,7 @@ public class Hardware {
 				"FL", "FR", "BL", "BR"
 		};
 
-		puller.setPosition(0);
+		puller.setPosition(0.3);
 
 		frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 		backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -129,6 +129,10 @@ public class Hardware {
 		return skystoneDetector.skystonePositions();
 	}
 
+	void setPullerPosition(double position) {
+		puller.setPosition(position);
+	}
+
 	void forward(int ticks, double speed, double timeoutS) {
 		move(ticks, ticks, ticks, ticks, speed, timeoutS, "Forward");
 	}
@@ -163,12 +167,14 @@ public class Hardware {
 
 	private void move(int flTicks, int frTicks, int blTicks, int brTicks,
 					  double speed, double timeoutS, String action) {
-		setWheelMode(DcMotor.RunMode.RUN_TO_POSITION);
+		setWheelMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 		frontLeft.setTargetPosition(flTicks);
 		frontRight.setTargetPosition(frTicks);
 		backLeft.setTargetPosition(blTicks);
 		backRight.setTargetPosition(brTicks);
+
+		setWheelMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 		for (DcMotor wheel : wheels) {
 			wheel.setPower(speed);
@@ -193,7 +199,7 @@ public class Hardware {
 
 	private boolean wheelsBusy() {
 		for (DcMotor wheel : wheels) {
-			if (wheel.isBusy()) {
+			if (Math.abs(wheel.getTargetPosition() - wheel.getCurrentPosition()) > 50) {
 				return true;
 			}
 		}

@@ -192,13 +192,13 @@ public class SkystoneDetector extends OpenCvPipeline {
 		}
 
 		// Find the distances between the stones using the length of the shape
-		double stoneDistX = (longEdge.x2 - longEdge.x1) / 6;
-		double stoneDistY = (longEdge.y2 - longEdge.y1) / 6;
+		double stoneDistX = (longEdge.x2 - longEdge.x1) / 3;
+		double stoneDistY = (longEdge.y2 - longEdge.y1) / 3;
 		// Find the vertical center of the stones
 		Point shortEdgeCenter = shortEdge.center();
 
 		// Calculate the center points
-		Point[] centers = new Point[6];
+		Point[] centers = new Point[3];
 		for (int i = 0; i < centers.length; i++) {
 			centers[i] = new Point(
 					(shortEdgeCenter.x + stoneDistX / 2) + stoneDistX * i,
