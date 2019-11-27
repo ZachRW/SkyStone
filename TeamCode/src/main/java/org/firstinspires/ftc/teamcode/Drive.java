@@ -19,6 +19,8 @@ public class Drive extends OpMode {
 
 	@Override
 	public void loop() {
+		hardware.setPullerPosition(0);
+
 		hardware.setMecanumPower(-gamepad1.left_stick_y,
 				gamepad1.left_stick_x, gamepad1.right_stick_x, .5);
 

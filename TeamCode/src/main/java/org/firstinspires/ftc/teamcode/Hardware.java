@@ -10,6 +10,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvInternalCamera;
 
 import java.util.List;
 
@@ -54,8 +57,6 @@ public class Hardware {
 		wheelLabels = new String[]{
 				"FL", "FR", "BL", "BR"
 		};
-
-		puller.setPosition(0.3);
 
 		frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 		backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -124,6 +125,17 @@ public class Hardware {
 	}
 
 	// Autonomous
+
+	void initSkystoneDetector() {
+		int cameraViewId = opMode.hardwareMap.appContext.getResources().getIdentifier(
+				"cameraMonitorViewId", "id",
+				opMode.hardwareMap.appContext.getPackageName());
+		OpenCvCamera phoneCam =
+				new OpenCvInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraViewId);
+		phoneCam.openCameraDevice();
+		phoneCam.setPipeline(skystoneDetector);
+		phoneCam.startStreaming(960, 720, OpenCvCameraRotation.UPRIGHT);
+	}
 
 	List<Integer> getSkystonePositions() {
 		return skystoneDetector.skystonePositions();
