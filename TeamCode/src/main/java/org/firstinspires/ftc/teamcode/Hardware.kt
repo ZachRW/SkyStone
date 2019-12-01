@@ -52,10 +52,12 @@ open class Hardware(hardwareMap: HardwareMap, protected val telemetry: Telemetry
         leftSlide.zeroPowerBehavior = ZeroPowerBehavior.BRAKE
         rightSlide.zeroPowerBehavior = ZeroPowerBehavior.BRAKE
 
-        puller.position = 0.0
-
         telemetry.addLine("Hardware Initialized")
         telemetry.update()
+    }
+
+    internal fun setPullerPosition(position: Double) {
+        puller.position = position
     }
 
     internal fun setMecanumPower(forwards: Double, strafe: Double, turn: Double, speed: Double) {
