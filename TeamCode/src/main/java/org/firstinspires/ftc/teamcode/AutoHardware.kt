@@ -3,6 +3,11 @@ package org.firstinspires.ftc.teamcode
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.hardware.DcMotor.RunMode
 import com.qualcomm.robotcore.util.ElapsedTime
+import org.openftc.easyopencv.OpenCvCamera
+import org.openftc.easyopencv.OpenCvCameraRotation
+import org.openftc.easyopencv.OpenCvInternalCamera
+import org.openftc.easyopencv.OpenCvInternalCamera.CameraDirection
+import kotlin.math.abs
 
 class AutoHardware(private val linearOpMode: LinearOpMode)
     : Hardware(linearOpMode.hardwareMap, linearOpMode.telemetry) {
@@ -12,6 +17,19 @@ class AutoHardware(private val linearOpMode: LinearOpMode)
 
     internal val skystonePositions: List<Int>?
         get() = skystoneDetector.skystonePositions()
+
+    internal fun initSkystoneDetector() {
+        val cameraViewId = linearOpMode.hardwareMap.appContext.resources.getIdentifier(
+                "cameraMonitorViewId", "id",
+                linearOpMode.hardwareMap.appContext.packageName
+        )
+
+        OpenCvInternalCamera(CameraDirection.BACK, cameraViewId).apply {
+            openCameraDevice()
+            setPipeline(skystoneDetector)
+            startStreaming(960, 720, OpenCvCameraRotation.UPRIGHT)
+        }
+    }
 
     internal fun forward(ticks: Int, speed: Double, timeoutS: Double) {
         move(ticks, ticks, ticks, ticks, speed, timeoutS, "Forward")
@@ -47,15 +65,16 @@ class AutoHardware(private val linearOpMode: LinearOpMode)
 
     private fun move(flTicks: Int, frTicks: Int, blTicks: Int, brTicks: Int,
                      speed: Double, timeoutS: Double, action: String) {
-        wheels.forEach { it.mode = RunMode.RUN_TO_POSITION }
+        wheels.forEach { it.mode = RunMode.STOP_AND_RESET_ENCODER }
 
         frontLeft.targetPosition = flTicks
         frontRight.targetPosition = frTicks
         backLeft.targetPosition = blTicks
         backRight.targetPosition = brTicks
 
-        for (wheel in wheels) {
-            wheel.power = speed
+        wheels.forEach {
+            it.power = speed
+            it.mode = RunMode.RUN_TO_POSITION
         }
 
         timer.reset()
@@ -76,5 +95,5 @@ class AutoHardware(private val linearOpMode: LinearOpMode)
     }
 
     private fun wheelsBusy(): Boolean =
-            wheels.any { it.targetPosition - it.currentPosition < 50 }
+            wheels.any { abs(it.targetPosition - it.currentPosition) > 50 }
 }
