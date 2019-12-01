@@ -27,8 +27,8 @@ public class DogeCVTest extends OpMode {
 
 	@Override
 	public void loop() {
-		List<Integer> positions = skystoneDetector.skystonePositions();
-		telemetry.addData("Skystone positions", positions);
+		int position = skystoneDetector.skystonePosition();
+		telemetry.addData("Skystone positions", position);
 		telemetry.update();
 	}
 

@@ -15,11 +15,11 @@ public class Drive extends OpMode {
 
 		telemetry.addLine("Initialization Finished");
 		telemetry.update();
+		hardware.setPullerPositions(1, 0);
 	}
 
 	@Override
 	public void loop() {
-		hardware.setPullerPosition(0);
 
 		hardware.setMecanumPower(-gamepad1.left_stick_y,
 				gamepad1.left_stick_x, gamepad1.right_stick_x, .5);
@@ -31,6 +31,13 @@ public class Drive extends OpMode {
 		}
 		else{
 			hardware.setLinearSlidePower(0);
+		}
+
+		if (gamepad1.x) {
+			hardware.setPullerPositions(1, 0);
+		}
+		if (gamepad1.y) {
+			hardware.setPullerPositions(.5, .2);
 		}
 
 		hardware.setSuckPower(gamepad2.left_trigger, gamepad2.right_trigger);

@@ -14,8 +14,6 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 
-import java.util.List;
-
 public class Hardware {
 	private DcMotor frontLeft, frontRight,
 			backLeft, backRight;
@@ -25,7 +23,7 @@ public class Hardware {
 	private DcMotor leftSlide, rightSlide;
 
 	private CRServo leftSuck, rightSuck;
-	private Servo puller;
+	private Servo leftPuller, rightPuller;
 
 	private LinearOpMode opMode;
 	private Telemetry telemetry;
@@ -40,15 +38,16 @@ public class Hardware {
 		timer            = new ElapsedTime();
 
 		HardwareMap hardwareMap = opMode.hardwareMap;
-		frontLeft  = hardwareMap.dcMotor.get("fl");
-		frontRight = hardwareMap.dcMotor.get("fr");
-		backLeft   = hardwareMap.dcMotor.get("bl");
-		backRight  = hardwareMap.dcMotor.get("br");
-		leftSlide  = hardwareMap.dcMotor.get("l slide");
-		rightSlide = hardwareMap.dcMotor.get("r slide");
-		leftSuck   = hardwareMap.crservo.get("ls");
-		rightSuck  = hardwareMap.crservo.get("rs");
-		puller     = hardwareMap.servo.get("pull");
+		frontLeft   = hardwareMap.dcMotor.get("fl");
+		frontRight  = hardwareMap.dcMotor.get("fr");
+		backLeft    = hardwareMap.dcMotor.get("bl");
+		backRight   = hardwareMap.dcMotor.get("br");
+		leftSlide   = hardwareMap.dcMotor.get("l slide");
+		rightSlide  = hardwareMap.dcMotor.get("r slide");
+		leftSuck    = hardwareMap.crservo.get("ls");
+		rightSuck   = hardwareMap.crservo.get("rs");
+		leftPuller  = hardwareMap.servo.get("l pull");
+		rightPuller = hardwareMap.servo.get("r pull");
 
 		wheels      = new DcMotor[]{
 				frontLeft, frontRight,
@@ -137,12 +136,13 @@ public class Hardware {
 		phoneCam.startStreaming(960, 720, OpenCvCameraRotation.UPRIGHT);
 	}
 
-	List<Integer> getSkystonePositions() {
-		return skystoneDetector.skystonePositions();
+	int getSkystonePosition() {
+		return skystoneDetector.skystonePosition();
 	}
 
-	void setPullerPosition(double position) {
-		puller.setPosition(position);
+	void setPullerPositions(double left, double right) {
+		leftPuller.setPosition(left);
+		rightPuller.setPosition(right);
 	}
 
 	void forward(int ticks, double speed, double timeoutS) {
@@ -179,6 +179,12 @@ public class Hardware {
 
 	private void move(int flTicks, int frTicks, int blTicks, int brTicks,
 					  double speed, double timeoutS, String action) {
+		move(flTicks, frTicks, blTicks, brTicks, speed, speed, speed, speed, timeoutS, action);
+	}
+
+	void move(int flTicks, int frTicks, int blTicks, int brTicks,
+					  double flSpeed, double frSpeed, double blSpeed, double brSpeed,
+					  double timeoutS, String action) {
 		setWheelMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 		frontLeft.setTargetPosition(flTicks);
@@ -188,9 +194,10 @@ public class Hardware {
 
 		setWheelMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-		for (DcMotor wheel : wheels) {
-			wheel.setPower(speed);
-		}
+		frontLeft.setPower(flSpeed);
+		frontRight.setPower(frSpeed);
+		backLeft.setPower(blSpeed);
+		backRight.setPower(brSpeed);
 
 		timer.reset();
 		while (wheelsBusy() && timer.seconds() < timeoutS && opMode.opModeIsActive()) {

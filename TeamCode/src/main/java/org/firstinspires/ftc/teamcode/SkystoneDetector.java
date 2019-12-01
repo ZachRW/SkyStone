@@ -79,10 +79,10 @@ public class SkystoneDetector extends OpenCvPipeline {
 	 *
 	 * @return a list of the positions of skystones.
 	 */
-	List<Integer> skystonePositions() {
+	int skystonePosition() {
 		// Return an empty list is frame is null
 		if (frame == null || frame.empty()) {
-			return new ArrayList<>();
+			return -1;
 		}
 
 		// Create image to draw on
@@ -93,15 +93,17 @@ public class SkystoneDetector extends OpenCvPipeline {
 		if (frame.empty()) {
 			telemetry.addLine("Empty frame");
 			telemetry.update();
-			return null;
+			return -1;
 		}
 		try {
 			rangeFilter.process(frame.clone(), colorMask);
 		} catch (OpenCvCameraException e) {
 			telemetry.addData("Error", e.getMessage());
 			telemetry.update();
-			return null;
+			return -1;
 		}
+
+		int position = -1;
 
 		// Find the contours (edges) of the mask
 		List<MatOfPoint> contours = new ArrayList<>();
@@ -141,7 +143,8 @@ public class SkystoneDetector extends OpenCvPipeline {
 				if (maskPixel != null && maskPixel.length > 0) {
 					if (maskPixel[0] == 0) {
 						// Add the index of the stone to the list
-						positions.add(i);
+						position = i;
+						break;
 					}
 				}
 			}
@@ -156,7 +159,7 @@ public class SkystoneDetector extends OpenCvPipeline {
 		display = drawImage;
 
 		// Return the positions
-		return positions;
+		return position;
 	}
 
 	/**
