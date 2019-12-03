@@ -29,27 +29,27 @@ class AutoHardware(private val linearOpMode: LinearOpMode)
         }
     }
 
-    internal fun forward(ticks: Int, speed: Double = 1.0, timeoutS: Double) {
+    internal fun forward(ticks: Int, speed: Double = 1.0, timeoutS: Double = 10.0) {
         move(ticks, ticks, ticks, ticks, speed, timeoutS, "Forward")
     }
 
-    internal fun backward(ticks: Int, speed: Double = 1.0, timeoutS: Double) {
+    internal fun backward(ticks: Int, speed: Double = 1.0, timeoutS: Double = 10.0) {
         move(-ticks, -ticks, -ticks, -ticks, speed, timeoutS, "Backward")
     }
 
-    internal fun right(ticks: Int, speed: Double = 1.0, timeoutS: Double) {
+    internal fun right(ticks: Int, speed: Double = 1.0, timeoutS: Double = 10.0) {
         move(-ticks, ticks, ticks, -ticks, speed, timeoutS, "Right")
     }
 
-    internal fun left(ticks: Int, speed: Double = 1.0, timeoutS: Double) {
+    internal fun left(ticks: Int, speed: Double = 1.0, timeoutS: Double = 10.0) {
         move(ticks, -ticks, -ticks, ticks, speed, timeoutS, "Left")
     }
 
-    internal fun turnRight(ticks: Int, speed: Double = 1.0, timeoutS: Double) {
+    internal fun turnRight(ticks: Int, speed: Double = 1.0, timeoutS: Double = 10.0) {
         move(ticks, -ticks, ticks, -ticks, speed, timeoutS, "Right Turn")
     }
 
-    internal fun turnLeft(ticks: Int, speed: Double = 1.0, timeoutS: Double) {
+    internal fun turnLeft(ticks: Int, speed: Double = 1.0, timeoutS: Double = 10.0) {
         move(-ticks, ticks, -ticks, ticks, speed, timeoutS, "Left Turn")
     }
 
