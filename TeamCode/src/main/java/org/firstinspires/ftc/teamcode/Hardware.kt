@@ -22,11 +22,12 @@ open class Hardware(hardwareMap: HardwareMap, protected val telemetry: Telemetry
 
     protected val leftSuck: CRServo
     protected val rightSuck: CRServo
-    protected val puller: Servo
+    protected val leftPuller: Servo
+    protected val rightPuller: Servo
 
 
     init {
-        hardwareMap.apply {
+        with(hardwareMap) {
             frontLeft = dcMotor["fl"]
             frontRight = dcMotor["fr"]
             backLeft = dcMotor["bl"]
@@ -35,7 +36,8 @@ open class Hardware(hardwareMap: HardwareMap, protected val telemetry: Telemetry
             rightSlide = dcMotor["r slide"]
             leftSuck = crservo["ls"]
             rightSuck = crservo["rs"]
-            puller = servo["pull"]
+            leftPuller = servo["l pull"]
+            rightPuller = servo["r pull"]
         }
 
         wheels = arrayOf(frontLeft, frontRight, backLeft, backRight)
@@ -56,8 +58,9 @@ open class Hardware(hardwareMap: HardwareMap, protected val telemetry: Telemetry
         telemetry.update()
     }
 
-    internal fun setPullerPosition(position: Double) {
-        puller.position = position
+    internal fun setPullerPositions(left: Double, right: Double) {
+        leftPuller.position = left
+        rightPuller.position = right
     }
 
     internal fun setMecanumPower(forwards: Double, strafe: Double, turn: Double, speed: Double) {

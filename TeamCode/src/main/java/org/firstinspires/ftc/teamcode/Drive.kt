@@ -12,22 +12,40 @@ class Drive : OpMode() {
     override fun init() {
         telemetry.addLine("Initialization Finished")
         telemetry.update()
+        hardware.setPullerPositions(1.0 , 0.0)
     }
 
     override fun loop() {
-        hardware.setPullerPosition(0.0)
+        with(hardware) {
+            with(gamepad1) {
+                setMecanumPower(-left_stick_y.toDouble(),
+                        left_stick_x.toDouble(), right_stick_x.toDouble(), 0.5)
 
-        hardware.setMecanumPower((-gamepad1.left_stick_y).toDouble(),
-                gamepad1.left_stick_x.toDouble(), gamepad1.right_stick_x.toDouble(), 0.5)
+                when {
+                    x -> {
+                        setPullerPositions(1.0, 0.0)
+                    }
+                    y -> {
+                        setPullerPositions(0.5, 0.2)
+                    }
+                }
+            }
 
-        if (gamepad2.dpad_up) {
-            hardware.setLinearSlidePower(-0.5)
-        } else if (gamepad2.dpad_down) {
-            hardware.setLinearSlidePower(0.5)
-        } else {
-            hardware.setLinearSlidePower(0.0)
+            with(gamepad2) {
+                when {
+                    dpad_up -> {
+                        setLinearSlidePower(-0.5)
+                    }
+                    dpad_down -> {
+                        setLinearSlidePower(0.5)
+                    }
+                    else -> {
+                        setLinearSlidePower(0.0)
+                    }
+                }
+
+                setSuckPower(left_trigger.toDouble(), right_trigger.toDouble())
+            }
         }
-
-        hardware.setSuckPower(gamepad2.left_trigger.toDouble(), gamepad2.right_trigger.toDouble())
     }
 }

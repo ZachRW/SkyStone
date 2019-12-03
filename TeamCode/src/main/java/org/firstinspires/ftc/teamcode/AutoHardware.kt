@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.hardware.DcMotor.RunMode
 import com.qualcomm.robotcore.util.ElapsedTime
-import org.openftc.easyopencv.OpenCvCamera
 import org.openftc.easyopencv.OpenCvCameraRotation
 import org.openftc.easyopencv.OpenCvInternalCamera
 import org.openftc.easyopencv.OpenCvInternalCamera.CameraDirection
@@ -19,10 +18,9 @@ class AutoHardware(private val linearOpMode: LinearOpMode)
         get() = skystoneDetector.skystonePositions()
 
     internal fun initSkystoneDetector() {
-        val cameraViewId = linearOpMode.hardwareMap.appContext.resources.getIdentifier(
-                "cameraMonitorViewId", "id",
-                linearOpMode.hardwareMap.appContext.packageName
-        )
+        val cameraViewId = linearOpMode.hardwareMap.appContext.run {
+            resources.getIdentifier("cameraMonitorViewId", "id", packageName)
+        }
 
         OpenCvInternalCamera(CameraDirection.BACK, cameraViewId).apply {
             openCameraDevice()
@@ -31,27 +29,27 @@ class AutoHardware(private val linearOpMode: LinearOpMode)
         }
     }
 
-    internal fun forward(ticks: Int, speed: Double, timeoutS: Double) {
+    internal fun forward(ticks: Int, speed: Double = 1.0, timeoutS: Double) {
         move(ticks, ticks, ticks, ticks, speed, timeoutS, "Forward")
     }
 
-    internal fun backward(ticks: Int, speed: Double, timeoutS: Double) {
+    internal fun backward(ticks: Int, speed: Double = 1.0, timeoutS: Double) {
         move(-ticks, -ticks, -ticks, -ticks, speed, timeoutS, "Backward")
     }
 
-    internal fun right(ticks: Int, speed: Double, timeoutS: Double) {
+    internal fun right(ticks: Int, speed: Double = 1.0, timeoutS: Double) {
         move(-ticks, ticks, ticks, -ticks, speed, timeoutS, "Right")
     }
 
-    internal fun left(ticks: Int, speed: Double, timeoutS: Double) {
+    internal fun left(ticks: Int, speed: Double = 1.0, timeoutS: Double) {
         move(ticks, -ticks, -ticks, ticks, speed, timeoutS, "Left")
     }
 
-    internal fun turnRight(ticks: Int, speed: Double, timeoutS: Double) {
+    internal fun turnRight(ticks: Int, speed: Double = 1.0, timeoutS: Double) {
         move(ticks, -ticks, ticks, -ticks, speed, timeoutS, "Right Turn")
     }
 
-    internal fun turnLeft(ticks: Int, speed: Double, timeoutS: Double) {
+    internal fun turnLeft(ticks: Int, speed: Double = 1.0, timeoutS: Double) {
         move(-ticks, ticks, -ticks, ticks, speed, timeoutS, "Left Turn")
     }
 
@@ -63,8 +61,9 @@ class AutoHardware(private val linearOpMode: LinearOpMode)
         }
     }
 
-    private fun move(flTicks: Int, frTicks: Int, blTicks: Int, brTicks: Int,
-                     speed: Double, timeoutS: Double, action: String) {
+    internal fun move(flTicks: Int, frTicks: Int, blTicks: Int, brTicks: Int,
+                      flSpeed: Double, frSpeed: Double, blSpeed: Double, brSpeed: Double,
+                      timeoutS: Double, action: String) {
         wheels.forEach { it.mode = RunMode.STOP_AND_RESET_ENCODER }
 
         frontLeft.targetPosition = flTicks
@@ -72,27 +71,33 @@ class AutoHardware(private val linearOpMode: LinearOpMode)
         backLeft.targetPosition = blTicks
         backRight.targetPosition = brTicks
 
-        wheels.forEach {
-            it.power = speed
-            it.mode = RunMode.RUN_TO_POSITION
-        }
+        frontLeft.power = flSpeed
+        frontRight.power = frSpeed
+        backLeft.power = blSpeed
+        backRight.power = brSpeed
+
+        wheels.forEach { it.mode = RunMode.RUN_TO_POSITION }
 
         timer.reset()
         while (wheelsBusy() && timer.seconds() < timeoutS && linearOpMode.opModeIsActive()) {
             telemetry.addLine(action + "\n")
             telemetry.addData("Motor", "Position |  Target  | Distance")
-            for (i in wheels.indices) {
+            for ((index, wheel) in wheels.withIndex()) {
                 telemetry.addData(
-                        wheelLabels[i],
+                        wheelLabels[index],
                         "%8d | %8d | %8d",
-                        wheels[i].currentPosition,
-                        wheels[i].targetPosition,
-                        wheels[i].targetPosition - wheels[i].currentPosition
+                        wheel.currentPosition,
+                        wheel.targetPosition,
+                        wheel.targetPosition - wheel.currentPosition
                 )
             }
             telemetry.update()
         }
     }
+
+    private fun move(flTicks: Int, frTicks: Int, blTicks: Int, brTicks: Int,
+                     speed: Double, timeoutS: Double, action: String) =
+            move(flTicks, frTicks, blTicks, brTicks, speed, speed, speed, speed, timeoutS, action)
 
     private fun wheelsBusy(): Boolean =
             wheels.any { abs(it.targetPosition - it.currentPosition) > 50 }
