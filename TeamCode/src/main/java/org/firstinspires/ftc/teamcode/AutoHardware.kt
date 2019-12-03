@@ -14,8 +14,8 @@ class AutoHardware(private val linearOpMode: LinearOpMode)
     private val skystoneDetector = SkystoneDetector(telemetry)
 
 
-    internal val skystonePositions: List<Int>?
-        get() = skystoneDetector.skystonePositions()
+    internal val skystonePosition: Int
+        get() = skystoneDetector.skystonePosition()
 
     internal fun initSkystoneDetector() {
         val cameraViewId = linearOpMode.hardwareMap.appContext.run {

@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 @Autonomous
 class Auto : LinearOpMode() {
     override fun runOpMode() {
-        val hardware = Hardware(this)
+        val hardware = AutoHardware(this)
 
         hardware.initSkystoneDetector()
 

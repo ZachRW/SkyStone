@@ -126,9 +126,6 @@ public class SkystoneDetector extends OpenCvPipeline {
 		// Outline the line of stones
 		Imgproc.drawContours(drawImage, contours, maxAreaIndex, new Scalar(0, 255, 0), 2);
 
-		// Create list of positions of the skystones
-		List<Integer> positions = new ArrayList<>();
-
 		// If the shape is larger than a threshold
 		if (maxArea > 100) {
 			// Get where the stone centers should be
@@ -142,7 +139,6 @@ public class SkystoneDetector extends OpenCvPipeline {
 				double[] maskPixel = colorMask.get((int) stoneCenters[i].y, (int) stoneCenters[i].x);
 				if (maskPixel != null && maskPixel.length > 0) {
 					if (maskPixel[0] == 0) {
-						// Add the index of the stone to the list
 						position = i;
 						break;
 					}
