@@ -8,8 +8,8 @@ import org.openftc.easyopencv.OpenCvInternalCamera
 import org.openftc.easyopencv.OpenCvInternalCamera.CameraDirection
 import kotlin.math.abs
 
-class AutoHardware(private val linearOpMode: LinearOpMode)
-    : Hardware(linearOpMode.hardwareMap, linearOpMode.telemetry) {
+class AutoHardware(private val linearOpMode: LinearOpMode) :
+    Hardware(linearOpMode.hardwareMap, linearOpMode.telemetry) {
     private val timer = ElapsedTime()
     private val skystoneDetector = SkystoneDetector(telemetry)
 
@@ -61,9 +61,11 @@ class AutoHardware(private val linearOpMode: LinearOpMode)
         }
     }
 
-    internal fun move(flTicks: Int, frTicks: Int, blTicks: Int, brTicks: Int,
-                      flSpeed: Double, frSpeed: Double, blSpeed: Double, brSpeed: Double,
-                      timeoutS: Double, action: String) {
+    internal fun move(
+        flTicks: Int, frTicks: Int, blTicks: Int, brTicks: Int,
+        flSpeed: Double, frSpeed: Double, blSpeed: Double, brSpeed: Double,
+        timeoutS: Double, action: String
+    ) {
         wheels.forEach { it.mode = RunMode.STOP_AND_RESET_ENCODER }
 
         frontLeft.targetPosition = flTicks
@@ -84,21 +86,22 @@ class AutoHardware(private val linearOpMode: LinearOpMode)
             telemetry.addData("Motor", "Position |  Target  | Distance")
             for ((index, wheel) in wheels.withIndex()) {
                 telemetry.addData(
-                        wheelLabels[index],
-                        "%8d | %8d | %8d",
-                        wheel.currentPosition,
-                        wheel.targetPosition,
-                        wheel.targetPosition - wheel.currentPosition
+                    wheelLabels[index],
+                    "%8d | %8d | %8d",
+                    wheel.currentPosition,
+                    wheel.targetPosition,
+                    wheel.targetPosition - wheel.currentPosition
                 )
             }
             telemetry.update()
         }
     }
 
-    private fun move(flTicks: Int, frTicks: Int, blTicks: Int, brTicks: Int,
-                     speed: Double, timeoutS: Double, action: String) =
-            move(flTicks, frTicks, blTicks, brTicks, speed, speed, speed, speed, timeoutS, action)
+    private fun move(
+        flTicks: Int, frTicks: Int, blTicks: Int, brTicks: Int,
+        speed: Double, timeoutS: Double, action: String
+    ) = move(flTicks, frTicks, blTicks, brTicks, speed, speed, speed, speed, timeoutS, action)
 
     private fun wheelsBusy(): Boolean =
-            wheels.any { abs(it.targetPosition - it.currentPosition) > 50 }
+        wheels.any { abs(it.targetPosition - it.currentPosition) > 50 }
 }

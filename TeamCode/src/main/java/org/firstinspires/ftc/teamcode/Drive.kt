@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
-import com.qualcomm.robotcore.hardware.DcMotor
-import com.qualcomm.robotcore.hardware.DcMotorSimple
 
 @TeleOp
 class Drive : OpMode() {
@@ -12,14 +10,16 @@ class Drive : OpMode() {
     override fun init() {
         telemetry.addLine("Initialization Finished")
         telemetry.update()
-        hardware.setPullerPositions(1.0 , 0.0)
+        hardware.setPullerPositions(1.0, 0.0)
     }
 
     override fun loop() {
         with(hardware) {
             with(gamepad1) {
-                setMecanumPower(-left_stick_y.toDouble(),
-                        left_stick_x.toDouble(), right_stick_x.toDouble(), 0.5)
+                setMecanumPower(
+                    -left_stick_y.toDouble(), left_stick_x.toDouble(),
+                    right_stick_x.toDouble(), 0.5
+                )
 
                 when {
                     x -> {

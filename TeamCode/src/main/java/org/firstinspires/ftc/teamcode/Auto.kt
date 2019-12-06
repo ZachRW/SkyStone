@@ -41,9 +41,11 @@ class Auto : LinearOpMode() {
                     backward(300, .75)
 
 //                    forward(3200, .5, 3.5)
-                    move(1600, 3200, 1600, 3200,
-                            .5, .75, .5, .75,
-                            5.0, "Custom")
+                    move(
+                        1600, 3200, 1600, 3200,
+                        .5, .75, .5, .75,
+                        5.0, "Custom"
+                    )
 
                     setPullerPositions(1.0, 0.0)
                     wait(.3)

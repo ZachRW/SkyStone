@@ -17,13 +17,13 @@ open class Hardware(hardwareMap: HardwareMap, protected val telemetry: Telemetry
     protected val wheels: Array<DcMotor>
     protected val wheelLabels: Array<String>
 
-    protected val leftSlide: DcMotor
-    protected val rightSlide: DcMotor
+    private val leftSlide: DcMotor
+    private val rightSlide: DcMotor
 
-    protected val leftSuck: CRServo
-    protected val rightSuck: CRServo
-    protected val leftPuller: Servo
-    protected val rightPuller: Servo
+    private val leftSuck: CRServo
+    private val rightSuck: CRServo
+    private val leftPuller: Servo
+    private val rightPuller: Servo
 
 
     init {

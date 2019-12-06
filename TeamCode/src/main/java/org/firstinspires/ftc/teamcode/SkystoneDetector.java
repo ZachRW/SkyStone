@@ -46,7 +46,7 @@ public class SkystoneDetector extends OpenCvPipeline {
 	 */
 	private Mat display;
 
-	private Telemetry telemetry;
+	private final Telemetry telemetry;
 
 	SkystoneDetector(Telemetry telemetry) {
 		this.telemetry = telemetry;
