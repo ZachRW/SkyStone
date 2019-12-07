@@ -8,6 +8,9 @@ import org.openftc.easyopencv.OpenCvInternalCamera
 import org.openftc.easyopencv.OpenCvInternalCamera.CameraDirection
 import kotlin.math.abs
 
+const val DEFAULT_SPEED = 0.6
+const val DEFAULT_TIMEOUT = 10.0
+
 class AutoHardware(private val linearOpMode: LinearOpMode) :
     Hardware(linearOpMode.hardwareMap, linearOpMode.telemetry) {
     private val timer = ElapsedTime()
@@ -29,35 +32,60 @@ class AutoHardware(private val linearOpMode: LinearOpMode) :
         }
     }
 
-    internal fun forward(ticks: Int, speed: Double = 1.0, timeoutS: Double = 10.0) {
+    internal fun forward(
+        ticks: Int,
+        speed: Double = DEFAULT_SPEED,
+        timeoutS: Double = DEFAULT_TIMEOUT
+    ) {
         move(ticks, ticks, ticks, ticks, speed, timeoutS, "Forward")
     }
 
-    internal fun backward(ticks: Int, speed: Double = 1.0, timeoutS: Double = 10.0) {
+    internal fun backward(
+        ticks: Int,
+        speed: Double = DEFAULT_SPEED,
+        timeoutS: Double = DEFAULT_TIMEOUT
+    ) {
         move(-ticks, -ticks, -ticks, -ticks, speed, timeoutS, "Backward")
     }
 
-    internal fun right(ticks: Int, speed: Double = 1.0, timeoutS: Double = 10.0) {
+    internal fun right(
+        ticks: Int,
+        speed: Double = DEFAULT_SPEED,
+        timeoutS: Double = DEFAULT_TIMEOUT
+    ) {
         move(-ticks, ticks, ticks, -ticks, speed, timeoutS, "Right")
     }
 
-    internal fun left(ticks: Int, speed: Double = 1.0, timeoutS: Double = 10.0) {
+    internal fun left(
+        ticks: Int,
+        speed: Double = DEFAULT_SPEED,
+        timeoutS: Double = DEFAULT_TIMEOUT
+    ) {
         move(ticks, -ticks, -ticks, ticks, speed, timeoutS, "Left")
     }
 
-    internal fun turnRight(ticks: Int, speed: Double = 1.0, timeoutS: Double = 10.0) {
+    internal fun turnRight(
+        ticks: Int,
+        speed: Double = DEFAULT_SPEED,
+        timeoutS: Double = DEFAULT_TIMEOUT
+    ) {
         move(ticks, -ticks, ticks, -ticks, speed, timeoutS, "Right Turn")
     }
 
-    internal fun turnLeft(ticks: Int, speed: Double = 1.0, timeoutS: Double = 10.0) {
+    internal fun turnLeft(
+        ticks: Int,
+        speed: Double = DEFAULT_SPEED,
+        timeoutS: Double = DEFAULT_TIMEOUT
+    ) {
         move(-ticks, ticks, -ticks, ticks, speed, timeoutS, "Left Turn")
     }
 
     internal fun wait(seconds: Double) {
         timer.reset()
         while (timer.seconds() < seconds && linearOpMode.opModeIsActive()) {
-            telemetry.addData("Waiting", "%4.2ds")
-            telemetry.update()
+            linearOpMode.idle()
+//            telemetry.addData("Waiting", "%4.2ds", seconds)
+//            telemetry.update()
         }
     }
 

@@ -43,8 +43,12 @@ open class Hardware(hardwareMap: HardwareMap, protected val telemetry: Telemetry
         wheels = arrayOf(frontLeft, frontRight, backLeft, backRight)
         wheelLabels = arrayOf("FL", "FR", "BL", "BR")
 
+        frontLeft.direction = Direction.REVERSE
+        backLeft.direction = Direction.REVERSE
+        leftSuck.direction = Direction.REVERSE
+        rightSuck.direction = Direction.REVERSE
+
         wheels.forEach {
-            it.direction = Direction.REVERSE
             it.zeroPowerBehavior = ZeroPowerBehavior.BRAKE
 
             it.mode = RunMode.STOP_AND_RESET_ENCODER

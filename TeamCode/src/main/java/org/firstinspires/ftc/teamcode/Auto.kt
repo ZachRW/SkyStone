@@ -14,62 +14,76 @@ class Auto : LinearOpMode() {
         waitForStart()
 
         with(hardware) {
-            setPullerPositions(1.0, 0.0)
+            setPullerPositions(1.0, 0.3)
+            wait(1.5)
 
             val stonePosition = skystonePosition
             telemetry.addData("Skystones", stonePosition)
             telemetry.update()
 
+            setPullerPositions(1.0, 0.0)
+
             when (stonePosition) {
                 0 -> {
-                    //get block
-                    backward(2600)
-                    right(1050)
-                    setPullerPositions(1.0, 0.15)
-                    wait(.5)
-                    //move block
+                    // get block
+                    backward(2750)
+                    right(920)
+                    setPullerPositions(1.0, 0.3)
+                    wait(.25)
+                    // move block
                     forward(1700)
-                    turnLeft(1700)
-                    backward(3000)
-                    turnRight(1600)
+                    turnLeft(1650)
+                    backward(3500, .9)
                     setPullerPositions(1.0, 0.0)
-                    //move plate
-                    right(3500)
-                    backward(1000)
-                    right(500)
-                    setPullerPositions(.4, .2)
-                    backward(300, .75)
-
-//                    forward(3200, .5, 3.5)
-                    move(
-                        1600, 3200, 1600, 3200,
-                        .5, .75, .5, .75,
-                        5.0, "Custom"
-                    )
-
-                    setPullerPositions(1.0, 0.0)
-                    wait(.3)
-                    left(3000, .75)
-                    backward(1500)
-                    turnLeft(1700)
-                    //get block
-                    forward(5800)
-                    turnRight(1600)
-                    backward(1100, timeoutS = 4.0)
-                    setPullerPositions(1.0, 0.15)
                     wait(.5)
-                    //move block
-                    forward(1200)
-                    turnLeft(1800)
-                    backward(5300)
+                    forward(5850)
+                    turnRight(1600)
+                    backward(850)
+                    setPullerPositions(1.0, 0.3)
+                    wait(.5)
+                    forward(1650)
+                    turnLeft(1600)
+                    backward(5600, .9)
                     setPullerPositions(1.0, 0.0)
                     forward(1000)
                 }
 
                 1 -> {
+                    // get block
+                    backward(2750)
+                    setPullerPositions(1.0, 0.3)
+                    right(250)
+                    wait(.3)
+                    // move block
+                    forward(1000)
+                    turnLeft(1650)
+                    backward(3700, .9)
+                    setPullerPositions(1.0, 0.0)
+                    wait(.2)
+                    forward(100)
+                    turnRight(120, 1.0, 1.0)
+                    forward(6200)
+                    turnRight(1300)
+                    backward(1200)
+                    setPullerPositions(1.0, 0.3)
+                    wait(.5)
+                    forward(1650)
+                    turnLeft(1600)
+                    backward(6400, .9)
+                    setPullerPositions(1.0, 0.0)
+                    forward(1200)
                 }
 
                 2 -> {
+                    // get block
+                    backward(2750)
+                    left(500)
+                    setPullerPositions(1.0, 0.3)
+                    wait(.3)
+                    // move block
+                    forward(1000)
+                    turnLeft(1650)
+                    backward(3600, .9)
                 }
             }
         }

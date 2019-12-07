@@ -5,20 +5,21 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 
 @TeleOp
 class Drive : OpMode() {
-    private val hardware = Hardware(hardwareMap, telemetry)
+    private var hardware: Hardware? = null
 
     override fun init() {
+        hardware = Hardware(hardwareMap, telemetry)
         telemetry.addLine("Initialization Finished")
         telemetry.update()
-        hardware.setPullerPositions(1.0, 0.0)
+        hardware!!.setPullerPositions(1.0, 0.0)
     }
 
     override fun loop() {
-        with(hardware) {
+        with(hardware!!) {
             with(gamepad1) {
                 setMecanumPower(
                     -left_stick_y.toDouble(), left_stick_x.toDouble(),
-                    right_stick_x.toDouble(), 0.5
+                    right_stick_x.toDouble(), 1.0
                 )
 
                 when {
