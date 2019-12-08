@@ -6,12 +6,21 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 @TeleOp
 class Drive : OpMode() {
     private var hardware: Hardware? = null
+    private var clawClosed = false
+    private var prevX = false
+    private var flickerIn = false
+    private var prevA = false
 
     override fun init() {
         hardware = Hardware(hardwareMap, telemetry)
         telemetry.addLine("Initialization Finished")
         telemetry.update()
-        hardware!!.setPullerPositions(1.0, 0.0)
+//        with(hardware!!) {
+//            setLeftPullerPosition(PullerPosition.UP)
+//            setRightPullerPosition(PullerPosition.UP)
+//            setClawPosition(0.3)
+//            setFlickerPosition(0.2)
+//        }
     }
 
     override fun loop() {
@@ -21,15 +30,6 @@ class Drive : OpMode() {
                     -left_stick_y.toDouble(), left_stick_x.toDouble(),
                     right_stick_x.toDouble(), 1.0
                 )
-
-                when {
-                    x -> {
-                        setPullerPositions(1.0, 0.0)
-                    }
-                    y -> {
-                        setPullerPositions(0.5, 0.2)
-                    }
-                }
             }
 
             with(gamepad2) {
@@ -45,7 +45,31 @@ class Drive : OpMode() {
                     }
                 }
 
-                setSuckPower(left_trigger.toDouble(), right_trigger.toDouble())
+//                if (x && !prevX) {
+//                    clawClosed = !clawClosed
+//                }
+//                if (a && !prevA) {
+//                    flickerIn = !flickerIn
+//                }
+//
+//                if (clawClosed) {
+//                    setClawPosition(0.5)
+//                } else {
+//                    setClawPosition(0.3)
+//                }
+//
+//                if (flickerIn) {
+//                    setFlickerPosition(0.8)
+//                } else {
+//                    setFlickerPosition(0.2)
+//                }
+//
+//                setClawSlidePower(right_stick_y.toDouble())
+//
+//                setSuckPower(left_trigger.toDouble(), right_trigger.toDouble())
+//
+//                prevX = x
+//                prevA = a
             }
         }
     }

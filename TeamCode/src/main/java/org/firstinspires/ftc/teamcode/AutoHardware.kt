@@ -36,49 +36,37 @@ class AutoHardware(private val linearOpMode: LinearOpMode) :
         ticks: Int,
         speed: Double = DEFAULT_SPEED,
         timeoutS: Double = DEFAULT_TIMEOUT
-    ) {
-        move(ticks, ticks, ticks, ticks, speed, timeoutS, "Forward")
-    }
+    ) = move(ticks, ticks, ticks, ticks, speed, timeoutS, "Forward")
 
     internal fun backward(
         ticks: Int,
         speed: Double = DEFAULT_SPEED,
         timeoutS: Double = DEFAULT_TIMEOUT
-    ) {
-        move(-ticks, -ticks, -ticks, -ticks, speed, timeoutS, "Backward")
-    }
+    ) = move(-ticks, -ticks, -ticks, -ticks, speed, timeoutS, "Backward")
 
     internal fun right(
         ticks: Int,
         speed: Double = DEFAULT_SPEED,
         timeoutS: Double = DEFAULT_TIMEOUT
-    ) {
-        move(-ticks, ticks, ticks, -ticks, speed, timeoutS, "Right")
-    }
+    ) = move(-ticks, ticks, ticks, -ticks, speed, timeoutS, "Right")
 
     internal fun left(
         ticks: Int,
         speed: Double = DEFAULT_SPEED,
         timeoutS: Double = DEFAULT_TIMEOUT
-    ) {
-        move(ticks, -ticks, -ticks, ticks, speed, timeoutS, "Left")
-    }
+    ) = move(ticks, -ticks, -ticks, ticks, speed, timeoutS, "Left")
 
     internal fun turnRight(
         ticks: Int,
         speed: Double = DEFAULT_SPEED,
         timeoutS: Double = DEFAULT_TIMEOUT
-    ) {
-        move(ticks, -ticks, ticks, -ticks, speed, timeoutS, "Right Turn")
-    }
+    ) = move(ticks, -ticks, ticks, -ticks, speed, timeoutS, "Right Turn")
 
     internal fun turnLeft(
         ticks: Int,
         speed: Double = DEFAULT_SPEED,
         timeoutS: Double = DEFAULT_TIMEOUT
-    ) {
-        move(-ticks, ticks, -ticks, ticks, speed, timeoutS, "Left Turn")
-    }
+    ) = move(-ticks, ticks, -ticks, ticks, speed, timeoutS, "Left Turn")
 
     internal fun wait(seconds: Double) {
         timer.reset()

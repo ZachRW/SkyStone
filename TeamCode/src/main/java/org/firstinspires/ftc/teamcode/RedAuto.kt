@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 
 @Autonomous
-class Auto : LinearOpMode() {
+class RedAuto : LinearOpMode() {
     override fun runOpMode() {
         val hardware = AutoHardware(this).apply { initSkystoneDetector() }
 
@@ -14,75 +14,80 @@ class Auto : LinearOpMode() {
         waitForStart()
 
         with(hardware) {
-            setPullerPositions(1.0, 0.3)
+            setClawPosition(0.5)
+            setFlickerPosition(0.5)
+            setLeftPullerPosition(PullerPosition.UP)
+            setRightPullerPosition(PullerPosition.DOWN)
             wait(1.5)
 
             val stonePosition = skystonePosition
             telemetry.addData("Skystones", stonePosition)
             telemetry.update()
 
-            setPullerPositions(1.0, 0.0)
+            setRightPullerPosition(PullerPosition.UP)
 
             when (stonePosition) {
-                0 -> {
+                2, -1 -> {
                     // get block
                     backward(2750)
-                    right(920)
-                    setPullerPositions(1.0, 0.3)
+                    left(920)
+                    setLeftPullerPosition(PullerPosition.DOWN)
                     wait(.25)
                     // move block
                     forward(1700)
-                    turnLeft(1650)
+                    turnRight(1650)
                     backward(3500, .9)
-                    setPullerPositions(1.0, 0.0)
+                    setLeftPullerPosition(PullerPosition.UP)
                     wait(.5)
                     forward(5850)
-                    turnRight(1600)
+                    turnLeft(1600)
                     backward(850)
-                    setPullerPositions(1.0, 0.3)
+                    setLeftPullerPosition(PullerPosition.DOWN)
                     wait(.5)
                     forward(1650)
-                    turnLeft(1600)
+                    turnRight(1600)
                     backward(5600, .9)
-                    setPullerPositions(1.0, 0.0)
+                    setLeftPullerPosition(PullerPosition.UP)
                     forward(1000)
                 }
 
                 1 -> {
-                    // get block
+                    // get first stone
                     backward(2750)
-                    setPullerPositions(1.0, 0.3)
-                    right(250)
+                    setLeftPullerPosition(PullerPosition.DOWN)
+                    left(250)
                     wait(.3)
-                    // move block
+                    // move stone
                     forward(1000)
-                    turnLeft(1650)
+                    turnRight(1650)
                     backward(3700, .9)
-                    setPullerPositions(1.0, 0.0)
+                    setLeftPullerPosition(PullerPosition.UP)
                     wait(.2)
+                    // get second stone
                     forward(100)
-                    turnRight(120, 1.0, 1.0)
+                    turnLeft(120, 1.0, 1.0)
                     forward(6200)
-                    turnRight(1300)
+                    turnLeft(1300)
                     backward(1200)
-                    setPullerPositions(1.0, 0.3)
+                    setLeftPullerPosition(PullerPosition.DOWN)
                     wait(.5)
+                    // move stone
                     forward(1650)
-                    turnLeft(1600)
+                    turnRight(1600)
                     backward(6400, .9)
-                    setPullerPositions(1.0, 0.0)
+                    setLeftPullerPosition(PullerPosition.UP)
                     forward(1200)
                 }
 
-                2 -> {
-                    // get block
+                0 -> {
+                    // get first stone
                     backward(2750)
-                    left(500)
-                    setPullerPositions(1.0, 0.3)
+                    right(500)
+                    setLeftPullerPosition(PullerPosition.DOWN)
                     wait(.3)
-                    // move block
+                    // move stone
                     forward(1000)
-                    turnLeft(1650)
+                    turnRight(1650)
                     backward(3600, .9)
                 }
             }
