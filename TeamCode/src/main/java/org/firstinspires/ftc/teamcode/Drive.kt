@@ -10,17 +10,21 @@ class Drive : OpMode() {
     private var prevX = false
     private var flickerIn = false
     private var prevA = false
+    private var leftX = 0;
+    private var leftY = 0;
+    private var rightX = 0;
+    private var rightY = 0;
 
     override fun init() {
         hardware = Hardware(hardwareMap, telemetry)
         telemetry.addLine("Initialization Finished")
         telemetry.update()
-//        with(hardware!!) {
-//            setLeftPullerPosition(PullerPosition.UP)
-//            setRightPullerPosition(PullerPosition.UP)
-//            setClawPosition(0.3)
-//            setFlickerPosition(0.2)
-//        }
+        with(hardware!!) {
+            setLeftPullerPosition(PullerPosition.UP)
+            setRightPullerPosition(PullerPosition.UP)
+            setClawPosition(0.3)
+            setFlickerPosition(0.2)
+        }
     }
 
     override fun loop() {
@@ -33,43 +37,61 @@ class Drive : OpMode() {
             }
 
             with(gamepad2) {
+//                when {
+//                    dpad_up -> {
+//                        setLinearSlidePower(-0.5)
+//                    }
+//                    dpad_down -> {
+//                        setLinearSlidePower(0.5)
+//                    }
+//                    else -> {
+//                        setLinearSlidePower(0.0)
+//                    }
+//                }
+                setLinearSlidePowerLeft(left_stick_y.toDouble())
+//                setLinearSlidePowerRight(right_stick_y.toDouble())
+
+                if (x && !prevX) {
+                    clawClosed = !clawClosed
+                }
+                if (a && !prevA) {
+                    flickerIn = !flickerIn
+                }
+
+                if (clawClosed) {
+                    setClawPosition(0.5)
+                } else {
+                    setClawPosition(0.3)
+                }
+
+                if (flickerIn) {
+                    setFlickerPosition(0.8)
+                } else {
+                    setFlickerPosition(0.2)
+                }
+
+                //setClawSlidePower(right_stick_y.toDouble())
                 when {
                     dpad_up -> {
-                        setLinearSlidePower(-0.5)
+                        setClawSlidePower(0.5)
                     }
                     dpad_down -> {
-                        setLinearSlidePower(0.5)
+                        setClawSlidePower(-0.5)
                     }
                     else -> {
-                        setLinearSlidePower(0.0)
+                        setClawSlidePower(0.0)
                     }
                 }
 
-//                if (x && !prevX) {
-//                    clawClosed = !clawClosed
-//                }
-//                if (a && !prevA) {
-//                    flickerIn = !flickerIn
-//                }
-//
-//                if (clawClosed) {
-//                    setClawPosition(0.5)
-//                } else {
-//                    setClawPosition(0.3)
-//                }
-//
-//                if (flickerIn) {
-//                    setFlickerPosition(0.8)
-//                } else {
-//                    setFlickerPosition(0.2)
-//                }
-//
-//                setClawSlidePower(right_stick_y.toDouble())
-//
-//                setSuckPower(left_trigger.toDouble(), right_trigger.toDouble())
-//
-//                prevX = x
-//                prevA = a
+                setSuckPower(left_trigger.toDouble(), right_trigger.toDouble())
+                when {
+                    left_bumper -> {
+                        setSuckPower(-1.0,-1.0)
+                    }
+
+                }
+                prevX = x
+                prevA = a
             }
         }
     }

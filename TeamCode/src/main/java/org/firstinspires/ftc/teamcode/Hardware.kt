@@ -111,9 +111,12 @@ open class Hardware(hardwareMap: HardwareMap, protected val telemetry: Telemetry
         backRight.power = (forwards - strafe - turn) * speed
     }
 
-    internal fun setLinearSlidePower(power: Double) {
-        leftSlide.power = power
+    internal fun setLinearSlidePowerRight(power: Double) {
         rightSlide.power = power
+
+    }
+    internal fun setLinearSlidePowerLeft(power: Double) {
+        leftSlide.power = power
     }
 
     internal fun setSuckPower(left: Double, right: Double) {
