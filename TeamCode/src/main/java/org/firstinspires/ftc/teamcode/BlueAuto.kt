@@ -29,90 +29,89 @@ class BlueAuto : LinearOpMode() {
             when (stonePosition) {
                 0, -1 -> {
                     // get first stone
-                    backward(2750)
-                    right(920)
+                    forward(2750)
+                    left(920)
                     setRightPullerPosition(PullerPosition.DOWN)
                     wait(.25)
                     // move stone
-                    forward(1700)
+                    backward(1700)
                     turnLeft(1650)
-                    backward(3500, .9)
+                    forward(3500, 0.9)
                     setRightPullerPosition(PullerPosition.UP)
                     wait(.5)
 
                     // get second stone
-                    forward(5850)
+                    backward(5850)
                     turnRight(1600)
-                    backward(850)
+                    forward(850)
                     setRightPullerPosition(PullerPosition.DOWN)
                     wait(.5)
                     // move stone
-                    forward(1650)
+                    backward(1650)
                     turnLeft(1600)
-                    backward(5600, .9)
+                    forward(5600, 0.9)
                     setRightPullerPosition(PullerPosition.UP)
-                    forward(1000)
+                    backward(1000)
                 }
 
                 1 -> {
                     // get first stone
-                    backward(2750)
+                    forward(2750)
                     setRightPullerPosition(PullerPosition.DOWN)
-                    right(250)
                     wait(.3)
                     // move stone
-                    forward(1000)
+                    backward(1000)
                     turnLeft(1650)
-                    backward(3700, .9)
+                    forward(4000, 0.9)
                     setRightPullerPosition(PullerPosition.UP)
                     wait(.2)
 
                     // get second stone
-                    forward(100)
+                    backward(100)
                     turnRight(120, 1.0, 1.0)
-                    forward(6200)
+                    backward(6200)
                     turnRight(1300)
-                    backward(1200)
+                    forward(1200)
                     setRightPullerPosition(PullerPosition.DOWN)
                     wait(.5)
                     // move stone
-                    forward(1650)
+                    backward(1650)
                     turnLeft(1600)
-                    backward(6400, .9)
+                    forward(6400, 0.9)
                     setRightPullerPosition(PullerPosition.UP)
-                    forward(1200)
+                    backward(1200)
                 }
 
                 2 -> {
                     // get first stone
-                    backward(2550, 0.7)
-                    left(850)
-                    backward(250)
+                    forward(2550, 0.7)
+                    right(850)
+                    forward(250)
                     setRightPullerPosition(PullerPosition.DOWN)
                     wait(.3)
                     // move stone
-                    forward(1000)
+                    backward(1000)
                     turnLeft(1650)
-                    backward(4500, 1.0)
+                    forward(4800, 0.7)
                     setRightPullerPosition(PullerPosition.UP)
                     wait(.2)
 
                     // get second stone
-                    forward(100)
+                    backward(100)
                     turnRight(160, 1.0, 1.5)
-                    forward(6000, 1.0)
+                    backward(6100, 1.0)
                     turnRight(1500)
-                    left(800, timeoutS = 3.0)
-                    backward(800, 0.7)
+                    right(750, timeoutS = 3.0)
+                    forward(1300, 0.7)
                     setRightPullerPosition(PullerPosition.DOWN)
                     wait(.5)
                     // move stone
-                    forward(1650)
-                    right(900)
+                    backward(1650)
+                    left(900)
                     turnLeft(1850)
-                    backward(6800, 1.0)
+                    forward(6500, 1.0)
                     setRightPullerPosition(PullerPosition.UP)
-                    forward(1200)
+                    backward(900)
                 }
             }
         }

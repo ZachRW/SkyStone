@@ -32,29 +32,31 @@ class AutoHardware(private val linearOpMode: LinearOpMode) :
         }
     }
 
-    internal fun forward(
-        ticks: Int,
-        speed: Double = DEFAULT_SPEED,
-        timeoutS: Double = DEFAULT_TIMEOUT
-    ) = move(ticks, ticks, ticks, ticks, speed, timeoutS, "Forward")
+    // Back is treated as front for autonomous movement
 
     internal fun backward(
         ticks: Int,
         speed: Double = DEFAULT_SPEED,
         timeoutS: Double = DEFAULT_TIMEOUT
-    ) = move(-ticks, -ticks, -ticks, -ticks, speed, timeoutS, "Backward")
+    ) = move(ticks, ticks, ticks, ticks, speed, timeoutS, "Backward")
 
-    internal fun right(
+    internal fun forward(
         ticks: Int,
         speed: Double = DEFAULT_SPEED,
         timeoutS: Double = DEFAULT_TIMEOUT
-    ) = move(-ticks, ticks, ticks, -ticks, speed, timeoutS, "Right")
+    ) = move(-ticks, -ticks, -ticks, -ticks, speed, timeoutS, "Forward")
 
     internal fun left(
         ticks: Int,
         speed: Double = DEFAULT_SPEED,
         timeoutS: Double = DEFAULT_TIMEOUT
-    ) = move(ticks, -ticks, -ticks, ticks, speed, timeoutS, "Left")
+    ) = move(-ticks, ticks, ticks, -ticks, speed, timeoutS, "Left")
+
+    internal fun right(
+        ticks: Int,
+        speed: Double = DEFAULT_SPEED,
+        timeoutS: Double = DEFAULT_TIMEOUT
+    ) = move(ticks, -ticks, -ticks, ticks, speed, timeoutS, "Right")
 
     internal fun turnRight(
         ticks: Int,
@@ -72,12 +74,10 @@ class AutoHardware(private val linearOpMode: LinearOpMode) :
         timer.reset()
         while (timer.seconds() < seconds && linearOpMode.opModeIsActive()) {
             linearOpMode.idle()
-//            telemetry.addData("Waiting", "%4.2ds", seconds)
-//            telemetry.update()
         }
     }
 
-    internal fun move(
+    private fun move(
         flTicks: Int, frTicks: Int, blTicks: Int, brTicks: Int,
         flSpeed: Double, frSpeed: Double, blSpeed: Double, brSpeed: Double,
         timeoutS: Double, action: String

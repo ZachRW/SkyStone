@@ -10,10 +10,6 @@ class Drive : OpMode() {
     private var prevX = false
     private var flickerIn = false
     private var prevA = false
-    private var leftX = 0;
-    private var leftY = 0;
-    private var rightX = 0;
-    private var rightY = 0;
 
     override fun init() {
         hardware = Hardware(hardwareMap, telemetry)
@@ -37,17 +33,6 @@ class Drive : OpMode() {
             }
 
             with(gamepad2) {
-//                when {
-//                    dpad_up -> {
-//                        setLinearSlidePower(-0.5)
-//                    }
-//                    dpad_down -> {
-//                        setLinearSlidePower(0.5)
-//                    }
-//                    else -> {
-//                        setLinearSlidePower(0.0)
-//                    }
-//                }
                 setLinearSlidePowerLeft(left_stick_y.toDouble())
 //                setLinearSlidePowerRight(right_stick_y.toDouble())
 
@@ -70,13 +55,12 @@ class Drive : OpMode() {
                     setFlickerPosition(0.2)
                 }
 
-                //setClawSlidePower(right_stick_y.toDouble())
                 when {
                     dpad_up -> {
-                        setClawSlidePower(0.5)
+                        setClawSlidePower(1.0)
                     }
                     dpad_down -> {
-                        setClawSlidePower(-0.5)
+                        setClawSlidePower(-1.0)
                     }
                     else -> {
                         setClawSlidePower(0.0)
@@ -86,10 +70,10 @@ class Drive : OpMode() {
                 setSuckPower(left_trigger.toDouble(), right_trigger.toDouble())
                 when {
                     left_bumper -> {
-                        setSuckPower(-1.0,-1.0)
+                        setSuckPower(-1.0, -1.0)
                     }
-
                 }
+
                 prevX = x
                 prevA = a
             }

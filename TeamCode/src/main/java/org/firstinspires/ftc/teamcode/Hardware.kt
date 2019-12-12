@@ -75,7 +75,7 @@ open class Hardware(hardwareMap: HardwareMap, protected val telemetry: Telemetry
             }
 
             PullerPosition.DOWN -> {
-                leftPuller.position = 0.5
+                leftPuller.position = 0.42
             }
         }
     }
@@ -87,7 +87,7 @@ open class Hardware(hardwareMap: HardwareMap, protected val telemetry: Telemetry
             }
 
             PullerPosition.DOWN -> {
-                rightPuller.position = 0.3
+                rightPuller.position = 0.55
             }
         }
     }
@@ -115,6 +115,7 @@ open class Hardware(hardwareMap: HardwareMap, protected val telemetry: Telemetry
         rightSlide.power = power
 
     }
+
     internal fun setLinearSlidePowerLeft(power: Double) {
         leftSlide.power = power
     }
