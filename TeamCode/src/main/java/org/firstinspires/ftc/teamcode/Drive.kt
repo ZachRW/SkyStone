@@ -6,10 +6,14 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 @TeleOp
 class Drive : OpMode() {
     private var hardware: Hardware? = null
+
+    private var speed = 1.0
+    private var reverse = false
+    private var prevX1 = false
     private var clawClosed = false
-    private var prevX = false
+    private var prevX2 = false
     private var flickerIn = false
-    private var prevA = false
+    private var prevA2 = false
 
     override fun init() {
         hardware = Hardware(hardwareMap, telemetry)
@@ -27,19 +31,38 @@ class Drive : OpMode() {
         with(hardware!!) {
             with(gamepad1) {
                 setMecanumPower(
-                    -left_stick_y.toDouble(), left_stick_x.toDouble(),
-                    right_stick_x.toDouble(), 1.0
+                    -left_stick_y.toDouble(),
+                    left_stick_x.toDouble(),
+                    right_stick_x.toDouble(),
+                    speed,
+                    reverse
                 )
+
+                when {
+                    dpad_up ->
+                        speed = 1.0
+
+                    dpad_left || dpad_right ->
+                        speed = 0.5
+
+                    dpad_down ->
+                        speed = 0.2
+                }
+
+                if (x && !prevX1) {
+                    reverse = !reverse
+                }
+
+                prevX1 = x
             }
 
             with(gamepad2) {
-                setLinearSlidePowerLeft(left_stick_y.toDouble())
-//                setLinearSlidePowerRight(right_stick_y.toDouble())
+                setLinearSlidePower(left_stick_y.toDouble())
 
-                if (x && !prevX) {
+                if (x && !prevX2) {
                     clawClosed = !clawClosed
                 }
-                if (a && !prevA) {
+                if (a && !prevA2) {
                     flickerIn = !flickerIn
                 }
 
@@ -74,8 +97,8 @@ class Drive : OpMode() {
                     }
                 }
 
-                prevX = x
-                prevA = a
+                prevX2 = x
+                prevA2 = a
             }
         }
     }

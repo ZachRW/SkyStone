@@ -85,13 +85,29 @@ class RedAuto : LinearOpMode() {
                 0 -> {
                     // get first stone
                     forward(2750)
-                    left(500)
                     setLeftPullerPosition(PullerPosition.DOWN)
                     wait(.3)
                     // move stone
                     backward(1000)
-                    turnRight(1650)
-                    forward(3600, 0.9)
+                    turnRight(1650, timeoutS = 1.5)
+                    forward(5200, 0.9)
+                    setLeftPullerPosition(PullerPosition.UP)
+                    wait(.2)
+
+                    // get second stone
+                    backward(6700)
+                    turnLeft(1550)
+                    left(500)
+                    forward(1500)
+                    setLeftPullerPosition(PullerPosition.DOWN)
+                    wait(.5)
+                    // move stone
+                    backward(1650)
+                    right(500)
+                    turnRight(1700, timeoutS = 1.5)
+                    forward(6600, 0.9)
+                    setLeftPullerPosition(PullerPosition.UP)
+                    backward(1200)
                 }
             }
         }

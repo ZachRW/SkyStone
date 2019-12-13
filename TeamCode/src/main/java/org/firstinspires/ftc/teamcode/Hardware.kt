@@ -17,8 +17,7 @@ open class Hardware(hardwareMap: HardwareMap, protected val telemetry: Telemetry
     val wheels: Array<DcMotor>
     val wheelLabels: Array<String>
 
-    private val leftSlide: DcMotor
-    private val rightSlide: DcMotor
+    private val slide: DcMotor
 
     private val leftSuck: CRServo
     private val rightSuck: CRServo
@@ -35,8 +34,7 @@ open class Hardware(hardwareMap: HardwareMap, protected val telemetry: Telemetry
             frontRight = dcMotor["fr"]
             backLeft = dcMotor["bl"]
             backRight = dcMotor["br"]
-            leftSlide = dcMotor["l slide"]
-            rightSlide = dcMotor["r slide"]
+            slide = dcMotor["l slide"]
             leftSuck = crservo["l suck"]
             rightSuck = crservo["r suck"]
             clawSlide = crservo["c slide"]
@@ -51,7 +49,7 @@ open class Hardware(hardwareMap: HardwareMap, protected val telemetry: Telemetry
 
         frontLeft.direction = Direction.REVERSE
         backLeft.direction = Direction.REVERSE
-        leftSlide.direction = Direction.REVERSE
+        slide.direction = Direction.REVERSE
         rightSuck.direction = Direction.REVERSE
 
         wheels.forEach {
@@ -61,8 +59,7 @@ open class Hardware(hardwareMap: HardwareMap, protected val telemetry: Telemetry
             it.mode = RunMode.RUN_USING_ENCODER
         }
 
-        leftSlide.zeroPowerBehavior = ZeroPowerBehavior.BRAKE
-        rightSlide.zeroPowerBehavior = ZeroPowerBehavior.BRAKE
+        slide.zeroPowerBehavior = ZeroPowerBehavior.BRAKE
 
         telemetry.addLine("Hardware Initialized")
         telemetry.update()
@@ -104,20 +101,24 @@ open class Hardware(hardwareMap: HardwareMap, protected val telemetry: Telemetry
         clawSlide.power = power
     }
 
-    internal fun setMecanumPower(forwards: Double, strafe: Double, turn: Double, speed: Double) {
-        frontLeft.power = (forwards - strafe + turn) * speed
-        frontRight.power = (forwards + strafe - turn) * speed
-        backLeft.power = (forwards + strafe + turn) * speed
-        backRight.power = (forwards - strafe - turn) * speed
+    internal fun setMecanumPower(
+        forwards: Double,
+        strafe: Double,
+        turn: Double,
+        speed: Double,
+        reverse: Boolean
+    ) {
+        val forwards0 = if (reverse) -forwards else forwards
+        val strafe0 = if (reverse) -strafe else strafe
+
+        frontLeft.power = (forwards0 - strafe0 + turn) * speed
+        frontRight.power = (forwards0 + strafe0 - turn) * speed
+        backLeft.power = (forwards0 + strafe0 + turn) * speed
+        backRight.power = (forwards0 - strafe0 - turn) * speed
     }
 
-    internal fun setLinearSlidePowerRight(power: Double) {
-        rightSlide.power = power
-
-    }
-
-    internal fun setLinearSlidePowerLeft(power: Double) {
-        leftSlide.power = power
+    internal fun setLinearSlidePower(power: Double) {
+        slide.power = power
     }
 
     internal fun setSuckPower(left: Double, right: Double) {
