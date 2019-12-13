@@ -30,7 +30,7 @@ class BlueAuto : LinearOpMode() {
                 0, -1 -> {
                     // get first stone
                     forward(2750)
-                    left(920)
+                    left(800)
                     setRightPullerPosition(PullerPosition.DOWN)
                     wait(.25)
                     // move stone
