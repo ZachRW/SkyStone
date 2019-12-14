@@ -66,27 +66,29 @@ open class Hardware(hardwareMap: HardwareMap, protected val telemetry: Telemetry
     }
 
     internal fun setLeftPullerPosition(position: PullerPosition) {
-        when (position) {
-            PullerPosition.UP -> {
-                leftPuller.position = 1.0
+        setLeftPullerPosition(
+            when (position) {
+                PullerPosition.UP -> 1.0
+                PullerPosition.DOWN -> 0.42
             }
+        )
+    }
 
-            PullerPosition.DOWN -> {
-                leftPuller.position = 0.42
-            }
-        }
+    internal fun setLeftPullerPosition(position: Double) {
+        leftPuller.position = position
     }
 
     internal fun setRightPullerPosition(position: PullerPosition) {
-        when (position) {
-            PullerPosition.UP -> {
-                rightPuller.position = 0.0
+        setRightPullerPosition(
+            when (position) {
+                PullerPosition.UP -> 0.0
+                PullerPosition.DOWN -> 0.55
             }
+        )
+    }
 
-            PullerPosition.DOWN -> {
-                rightPuller.position = 0.55
-            }
-        }
+    internal fun setRightPullerPosition(position: Double) {
+        rightPuller.position = position
     }
 
     internal fun setFlickerPosition(position: Double) {
