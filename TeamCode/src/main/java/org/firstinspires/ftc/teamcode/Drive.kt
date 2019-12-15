@@ -77,7 +77,7 @@ class Drive : OpMode() {
                 }
 
                 setClawPosition(if (clawClosed) 0.5 else 0.3)
-                setFlickerPosition(if (flickerIn) 1.0 else 0.0)
+                setFlickerPosition(if (flickerIn) 0.0 else 1.0)
 
                 setClawSlidePower(
                     when {

@@ -15,7 +15,7 @@ class RedAuto : LinearOpMode() {
 
         with(hardware) {
             setClawPosition(0.5)
-            setFlickerPosition(0.5)
+            setFlickerPosition(1.0)
             setLeftPullerPosition(PullerPosition.UP)
             setRightPullerPosition(PullerPosition.DOWN)
             wait(1.5)
@@ -41,73 +41,43 @@ class RedAuto : LinearOpMode() {
                     setRightPullerPosition(PullerPosition.UP)
                     wait(.5)
 
-                    // get second stone
-                    backward(5600, 0.7)
-                    turnLeft(1550)
-                    forward(2000)
-                    setLeftPullerPosition(PullerPosition.DOWN)
-                    wait(.5)
-                    // move stone
-                    backward(1650)
-                    turnRight(1600, timeoutS = 1.5)
-                    forward(5600, 0.9)
-                    setLeftPullerPosition(PullerPosition.UP)
-                    backward(1000)
+                    backward(1200)
+                    left(3000)
                 }
 
                 1 -> {
                     // get first stone
                     forward(2750)
-                    right(800)
+                    right(650)
                     setLeftPullerPosition(PullerPosition.DOWN)
                     wait(.3)
                     // move stone
                     backward(1000)
-                    turnRight(1650, timeoutS = 1.5)
+                    turnRight(1600, timeoutS = 1.5)
                     forward(4300, 0.9)
                     setLeftPullerPosition(PullerPosition.UP)
                     wait(.2)
 
-                    // get second stone
-                    backward(6250)
-                    turnLeft(1500)
-                    forward(1800)
-                    setLeftPullerPosition(PullerPosition.DOWN)
-                    wait(.5)
-                    // move stone
-                    backward(1650)
-                    turnRight(1600, timeoutS = 1.5)
-                    forward(6400, 0.9)
-                    setLeftPullerPosition(PullerPosition.UP)
                     backward(1200)
+                    left(1000)
                 }
 
                 0 -> {
                     // get first stone
                     forward(2750)
+                    left(100)
+                    turnLeft(100, 1.0, 1.0)
                     setLeftPullerPosition(PullerPosition.DOWN)
                     wait(.3)
                     // move stone
                     backward(1000)
-                    turnRight(1650, timeoutS = 1.5)
+                    turnRight(1450, timeoutS = 1.5)
                     forward(5200, 0.9)
                     setLeftPullerPosition(PullerPosition.UP)
                     wait(.2)
 
-                    // get second stone
-                    backward(6700)
-                    turnLeft(1550)
-                    left(500)
-                    forward(1500)
-                    setLeftPullerPosition(PullerPosition.DOWN)
-                    wait(.5)
-                    // move stone
-                    backward(1650)
-                    right(500)
-                    turnRight(1700, timeoutS = 1.5)
-                    forward(6600, 0.9)
-                    setLeftPullerPosition(PullerPosition.UP)
                     backward(1200)
+                    left(1000)
                 }
             }
         }
