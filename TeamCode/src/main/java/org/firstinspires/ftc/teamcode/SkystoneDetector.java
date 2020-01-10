@@ -32,9 +32,15 @@ public class SkystoneDetector extends OpenCvPipeline {
      * V: [0, 255]
      */
     private final HSVRangeFilter rangeFilter = new HSVRangeFilter(
-            new Scalar(8.5, 127.5, 127.5),
+            new Scalar(8.5, 127.5, 100),
             new Scalar(53.125, 255, 255)
     );
+
+    private final Point[] stoneCenters = {
+            new Point(150, 810),
+            new Point(350, 790),
+            new Point(550, 770)
+    };
 
     /**
      * The current frame of the video feed.
@@ -110,38 +116,21 @@ public class SkystoneDetector extends OpenCvPipeline {
         Imgproc.findContours(colorMask, contours, new Mat(),
                 Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
 
-        // Use the contours to find the largest yellowish shape.
-        // This is presumably the line of stones.
-        double maxArea = 0;
-        int maxAreaIndex = 0;
-        for (int i = 0; i < contours.size(); i++) {
-            double area = Imgproc.contourArea(contours.get(i));
+        // Outline the line of stones
+        Imgproc.drawContours(drawImage, contours, -1, new Scalar(0, 255, 0), 2);
 
-            if (area > maxArea) {
-                maxArea      = area;
-                maxAreaIndex = i;
-            }
+        // Draw the center points
+        for (Point stoneCenter : stoneCenters) {
+            Imgproc.circle(drawImage, stoneCenter, 1, new Scalar(255, 0, 0), 10);
         }
 
-        // Outline the line of stones
-        Imgproc.drawContours(drawImage, contours, maxAreaIndex, new Scalar(0, 255, 0), 2);
-
-        // If the shape is larger than a threshold
-        if (maxArea > 100) {
-            // Get where the stone centers should be
-            Point[] stoneCenters = stoneCenters(contours.get(maxAreaIndex));
-
-            for (int i = 0; i < stoneCenters.length; i++) {
-                // Draw the center points
-                Imgproc.circle(drawImage, stoneCenters[i], 1, new Scalar(255, 0, 0), 10);
-
-                // If the center point is not yellowish, it is a skystone
-                double[] maskPixel = colorMask.get((int) stoneCenters[i].y, (int) stoneCenters[i].x);
-                if (maskPixel != null && maskPixel.length > 0) {
-                    if (maskPixel[0] == 0) {
-                        position = i;
-                        break;
-                    }
+        for (int i = 0; i < stoneCenters.length; i++) {
+            // If the center point is not yellowish, it is a skystone
+            double[] maskPixel = colorMask.get((int) stoneCenters[i].y, (int) stoneCenters[i].x);
+            if (maskPixel != null && maskPixel.length > 0) {
+                if (maskPixel[0] == 0) {
+                    position = i;
+                    break;
                 }
             }
         }
@@ -156,56 +145,5 @@ public class SkystoneDetector extends OpenCvPipeline {
 
         // Return the positions
         return position;
-    }
-
-    /**
-     * Finds the centers of the stones.
-     * It uses a minimum area rectangle to find evenly
-     * spaced points along the shape's lengthwise bisector.
-     *
-     * @param contour the edges of the line of stones
-     * @return the center points of the stones
-     */
-    private Point[] stoneCenters(MatOfPoint contour) {
-        // Convert contour to MatOfPoint2f
-        MatOfPoint2f contour2f = new MatOfPoint2f(contour.toArray());
-
-        // Find the minimum area rectangle containing all of the stones
-        RotatedRect boundingBox = Imgproc.minAreaRect(contour2f);
-        // Get the points of the rectangle
-        Point[] boundingPoints = new Point[4];
-        boundingBox.points(boundingPoints);
-
-        // Get two adjacent edges
-        Line edge1 = new Line(boundingPoints[1], boundingPoints[0]);
-        Line edge2 = new Line(boundingPoints[1], boundingPoints[2]);
-
-        // Find which is longer and which is shorter
-        Line longEdge, shortEdge;
-        if (edge1.compareTo(edge2) > 0) {
-            longEdge  = edge1;
-            shortEdge = edge2;
-        } else {
-            shortEdge = edge1;
-            longEdge  = edge2;
-        }
-
-        // Find the distances between the stones using the length of the shape
-        double stoneDistX = (longEdge.x2 - longEdge.x1) / 3;
-        double stoneDistY = (longEdge.y2 - longEdge.y1) / 3;
-        // Find the vertical center of the stones
-        Point shortEdgeCenter = shortEdge.center();
-
-        // Calculate the center points
-        Point[] centers = new Point[3];
-        for (int i = 0; i < centers.length; i++) {
-            centers[i] = new Point(
-                    (shortEdgeCenter.x + stoneDistX / 2) + stoneDistX * i,
-                    (shortEdgeCenter.y + stoneDistY / 2) + stoneDistY * i
-            );
-        }
-
-        // Return the centers
-        return centers;
     }
 }

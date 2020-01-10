@@ -152,6 +152,7 @@ open class Hardware(hardwareMap: HardwareMap, protected val telemetry: Telemetry
 
             it.mode = RunMode.STOP_AND_RESET_ENCODER
             it.mode = RunMode.RUN_USING_ENCODER
+//            it.mode = RunMode.RUN_WITHOUT_ENCODER
         }
 
         slide.zeroPowerBehavior = ZeroPowerBehavior.BRAKE
