@@ -4,10 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import edu.spa.ftclib.internal.state.ToggleBoolean
 import edu.spa.ftclib.internal.state.ToggleDouble
-import java.lang.Math.toDegrees
 
 @TeleOp
-class Drive : OpMode() {
+class DriveOld : OpMode() {
     private lateinit var hardware: Hardware
 
     private var speed = 1.0
@@ -30,12 +29,6 @@ class Drive : OpMode() {
 
     override fun loop() {
         with(hardware) {
-            telemetry.addData("Left", toDegrees(leftIMU.angularOrientation.firstAngle.toDouble()))
-            telemetry.addData("Right", toDegrees(rightIMU.angularOrientation.firstAngle.toDouble()))
-            telemetry.addData("Heading", toDegrees(drivetrain.currentHeading))
-            telemetry.addData("Target", toDegrees(drivetrain.targetHeading))
-            telemetry.update()
-
             with(gamepad1) {
                 reverse.input(x)
                 leftPullerPos.input(left_bumper)
@@ -52,7 +45,7 @@ class Drive : OpMode() {
                         speed = 0.2
                 }
 
-                setMecanumPowerGyro(
+                setMecanumPower(
                     -left_stick_y.toDouble(),
                     left_stick_x.toDouble(),
                     right_stick_x.toDouble(),
