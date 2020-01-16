@@ -209,10 +209,10 @@ open class Hardware(hardwareMap: HardwareMap, protected val telemetry: Telemetry
         val forwards0 = if (reverse) -forwards else forwards
         val strafe0 = if (reverse) -strafe else strafe
 
-        frontLeft.power = (forwards0 - strafe0 + turn) * speed
-        frontRight.power = -(forwards0 + strafe0 - turn) * speed
-        backLeft.power = (forwards0 + strafe0 + turn) * speed
-        backRight.power = -(forwards0 - strafe0 - turn) * speed
+        frontLeft.power = -(forwards0 - strafe0 + turn) * speed
+        frontRight.power = (forwards0 + strafe0 - turn) * speed
+        backLeft.power = -(forwards0 + strafe0 + turn) * speed
+        backRight.power = (forwards0 - strafe0 - turn) * speed
     }
 
     fun setMecanumPowerGyro(
